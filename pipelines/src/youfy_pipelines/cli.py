@@ -10,6 +10,7 @@ from youfy_catalog.settings import Settings
 from .featurize import run_featurize
 from .ingest import run_ingest
 from .logging import configure_logging
+from .split import run_split
 
 app = typer.Typer(help="Youfy — pipelines de dados e treino.")
 pipeline = typer.Typer(help="Estágios do pipeline offline.")
@@ -58,3 +59,22 @@ def featurize_cmd(
         f"computadas={relatorio.computed} puladas={relatorio.skipped} "
         f"falhas={relatorio.failed}"
     )
+
+
+@pipeline.command("split")
+def split_cmd(
+    data_dir: Path = typer.Option(None),  # noqa: B008
+    seed: int = typer.Option(42),
+    n_mels: int = typer.Option(128),
+    hop_length: int = typer.Option(512),
+    n_frames: int = typer.Option(1292),
+) -> None:
+    configure_logging()
+    raiz = data_dir or Settings().data_dir
+    spec = FeatureSpec(n_mels=n_mels, hop_length=hop_length, n_frames=n_frames)
+    with session_scope() as session:
+        splits = run_split(session, data_dir=raiz, spec=spec, seed=seed)
+    typer.echo(
+        f"train={len(splits.train)} val={len(splits.val)} test={len(splits.test)}"
+    )
+
