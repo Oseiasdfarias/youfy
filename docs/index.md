@@ -188,19 +188,24 @@ Experimente abaixo o reprodutor musical integrado com o componente de inferênci
   </div>
 
   <!-- Controls Bar & Telemetry Indicator -->
-  <div style="display: flex; items-center; justify-content: space-between; align-items: center; pt-2; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.85rem; flex-wrap: wrap; gap: 0.75rem;">
-    <!-- Media Buttons -->
-    <div style="display: flex; align-items: center; gap: 0.85rem;">
-      <button class="youfy-ctrl-btn" onclick="prevTrack()" title="Faixa Anterior">⏮</button>
-      <button class="youfy-play-btn-circle" id="btn-player-play" onclick="togglePlaySynth()" title="Reproduzir / Pausar">
-        <span id="player-play-icon">▶</span>
+  <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1rem; flex-wrap: wrap; gap: 1rem;">
+    <!-- Media Buttons (Larger & with Action Name) -->
+    <div style="display: flex; align-items: center; gap: 0.65rem;">
+      <button class="youfy-ctrl-btn" onclick="prevTrack()" title="Faixa Anterior">
+        <span>⏮</span>
       </button>
-      <button class="youfy-ctrl-btn" onclick="nextTrack()" title="Próxima Faixa">⏭</button>
+      <button class="youfy-play-btn-pill" id="btn-player-play" onclick="togglePlaySynth()" title="Reproduzir / Pausar">
+        <span id="player-play-icon" style="font-size: 1.15rem; line-height: 1;">▶</span>
+        <span id="player-play-text" style="letter-spacing: -0.01em;">Reproduzir Áudio</span>
+      </button>
+      <button class="youfy-ctrl-btn" onclick="nextTrack()" title="Próxima Faixa">
+        <span>⏭</span>
+      </button>
     </div>
 
     <!-- Telemetry Indicator -->
-    <div style="display: flex; align-items: center; gap: 0.5rem; font-family: var(--md-font-code); font-size: 0.72rem; color: #a1a1aa;">
-      <span style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);"></span>
+    <div style="display: flex; align-items: center; gap: 0.5rem; font-family: var(--md-font-code); font-size: 0.75rem; color: #a1a1aa;">
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);"></span>
       <span>actor: <strong style="color: #ffffff;">human:osfarias</strong></span>
       <span style="color: #52525b;">|</span>
       <span>surface: <strong style="color: #ffffff;">search</strong></span>
@@ -300,6 +305,8 @@ function startSynth() {
 
     isPlaying = true;
     document.getElementById('player-play-icon').textContent = '❚❚';
+    const textEl = document.getElementById('player-play-text');
+    if (textEl) textEl.textContent = 'Pausar Áudio';
 
     // Rich polyphonic arpeggio sequence
     const notes = [
@@ -407,6 +414,8 @@ function stopSynth() {
   if (synthTimer) clearInterval(synthTimer);
   if (animFrameId) cancelAnimationFrame(animFrameId);
   document.getElementById('player-play-icon').textContent = '▶';
+  const textEl = document.getElementById('player-play-text');
+  if (textEl) textEl.textContent = 'Reproduzir Áudio';
   setTimeout(drawPlayerIdle, 100);
 }
 

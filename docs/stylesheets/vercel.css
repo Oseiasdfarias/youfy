@@ -279,30 +279,57 @@ body {
 }
 
 .youfy-ctrl-btn {
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   cursor: pointer;
-  color: #a1a1aa;
-  font-size: 1.1rem;
+  color: #d4d4d8;
+  font-size: 1.25rem;
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.4rem;
-  transition: color 0.15s ease, transform 0.1s ease;
+  transition: all 0.15s ease;
 }
 
 .youfy-ctrl-btn:hover {
   color: #ffffff;
-  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.youfy-play-btn-pill {
+  height: 44px;
+  padding: 0 1.35rem;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #000000;
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 12px rgba(255, 255, 255, 0.2);
+}
+
+.youfy-play-btn-pill:hover {
+  background: #f4f4f5;
+  transform: scale(1.03);
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.35);
 }
 
 .youfy-play-btn-circle {
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: #ffffff;
   color: #000000;
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: bold;
   display: inline-flex;
   align-items: center;
@@ -315,8 +342,8 @@ body {
 
 .youfy-play-btn-circle:hover {
   background: #f4f4f5;
-  transform: scale(1.05);
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3);
+  transform: scale(1.06);
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.35);
 }
 
 /* Mermaid Diagrams Minimalist Styling */
