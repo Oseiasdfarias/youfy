@@ -46,12 +46,12 @@ Trabalhar com um único usuário humano gera um ciclo de MLOps estatisticamente 
 
 ```mermaid
 flowchart LR
-    subgraph População Sintética
+    subgraph S_Sim["População Sintética"]
         Sim["Simulador de Usuários"] -->|Sessões de Escuta| Batch["Lotes de Eventos"]
         Batch -->|actor_kind='simulated'| Events[("Event Store (Postgres)")]
     end
 
-    subgraph Escuta Humana (Holdout Puro)
+    subgraph S_Hum["Escuta Humana (Holdout Puro)"]
         User["Usuário Humano"] -->|Player TUI| RealEvent["Eventos Reais"]
         RealEvent -->|actor_kind='human'| Events
     end

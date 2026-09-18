@@ -27,23 +27,23 @@ $$\text{artistas}(\text{val}) \cap \text{artistas}(\text{test}) = \emptyset$$
 
 ```mermaid
 flowchart TD
-    subgraph Catalog["Acervo Completo de Artistas (N Artistas Únicos)"]
-        Art[Artistas {A1, A2, A3, ... An}]
+    subgraph Catalog["Acervo Completo de Artistas - N Artistas Únicos"]
+        Art["Artistas: A1, A2, A3, ... An"]
     end
 
     subgraph Splits["Partições 100% Estritas e Disjuntas"]
-        Train["Conjunto de Treino (Train ~80%)<br/>Artistas: {A1, A4, A7, ...}"]
-        Val["Conjunto de Validação (Val ~10%)<br/>Artistas: {A2, A5, ...}"]
-        Test["Conjunto de Teste (Test ~10%)<br/>Artistas: {A3, A6, ...}"]
+        Train["Conjunto de Treino - Train ~80%<br/>Artistas: A1, A4, A7, ..."]
+        Val["Conjunto de Validação - Val ~10%<br/>Artistas: A2, A5, ..."]
+        Test["Conjunto de Teste - Test ~10%<br/>Artistas: A3, A6, ..."]
     end
 
-    Art -->|"Atribuição atômica por artista"| Train
-    Art -->|"Zero interseção"| Val
-    Art -->|"Zero vazamento"| Test
+    Art --> Train
+    Art --> Val
+    Art --> Test
 
-    Train <-.->|Interseção = ∅| Val
-    Val <-.->|Interseção = ∅| Test
-    Train <-.->|Interseção = ∅| Test
+    Train <-.->|"Disjunção: Interseção Vazia"| Val
+    Val <-.->|"Disjunção: Interseção Vazia"| Test
+    Train <-.->|"Disjunção: Interseção Vazia"| Test
 
     classDef catalog fill:#18181b,stroke:#a855f7,stroke-width:1.5px,color:#f4f4f5;
     classDef train fill:#18181b,stroke:#3b82f6,stroke-width:1.5px,color:#60a5fa;
