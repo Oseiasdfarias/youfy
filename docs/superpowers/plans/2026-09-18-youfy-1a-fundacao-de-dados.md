@@ -1155,7 +1155,7 @@ git commit -m "feat(catalog): leitor do dump fma e repositorio idempotente"
 
 **Nota de fronteira:** é aqui que `audio` e `catalog` se encontram pela primeira vez. `catalog` continua sem saber o que é um mel-espectrograma e `audio` continua sem saber o que é um banco. A composição mora em `pipelines`, e só nele.
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # pipelines/tests/test_ingest.py
@@ -1208,12 +1208,12 @@ def test_taxa_de_falha_e_calculada():
     assert IngestReport(total=0, ingested=0, failed=0).failure_rate == 0.0
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest pipelines/tests/test_ingest.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_pipelines.ingest'`
 
-- [ ] **Step 3: Implementar o logging estruturado**
+- [x] **Step 3: Implementar o logging estruturado**
 
 ```python
 # pipelines/src/youfy_pipelines/logging.py
@@ -1235,7 +1235,7 @@ def configure_logging(level: int = logging.INFO) -> None:
     )
 ```
 
-- [ ] **Step 4: Implementar o estágio de ingestão**
+- [x] **Step 4: Implementar o estágio de ingestão**
 
 ```python
 # pipelines/src/youfy_pipelines/ingest.py
@@ -1310,7 +1310,7 @@ def run_ingest(
     return relatorio
 ```
 
-- [ ] **Step 5: Implementar a CLI**
+- [x] **Step 5: Implementar a CLI**
 
 ```python
 # pipelines/src/youfy_pipelines/cli.py
@@ -1354,12 +1354,12 @@ def ingest_cmd(
         raise typer.Exit(code=1)
 ```
 
-- [ ] **Step 6: Rodar os testes e confirmar que passam**
+- [x] **Step 6: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest pipelines/tests/test_ingest.py -v && uv run youfy pipeline --help`
 Expected: PASS nos 5 testes; o help lista o comando `ingest`
 
-- [ ] **Step 7: Commitar**
+- [x] **Step 7: Commitar**
 
 ```bash
 git add pipelines
@@ -1386,7 +1386,7 @@ git commit -m "feat(pipelines): cli youfy, logging estruturado e estagio de inge
 
 A invalidação de cache acontece por **diretório derivado do fingerprint**. Mudar a config não apaga nada: cria um diretório novo ao lado. É o que torna o estágio seguro para interromper e reexecutar à vontade.
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # pipelines/tests/test_featurize.py
@@ -1462,12 +1462,12 @@ def test_manifest_registra_a_spec(session, tmp_path):
     assert manifesto["spec"]["n_mels"] == 32
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest pipelines/tests/test_featurize.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_pipelines.featurize'`
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 ```python
 # pipelines/src/youfy_pipelines/featurize.py
@@ -1559,7 +1559,7 @@ def _registrar_feature(
     )
 ```
 
-- [ ] **Step 4: Adicionar o comando à CLI**
+- [x] **Step 4: Adicionar o comando à CLI**
 
 ```python
 # pipelines/src/youfy_pipelines/cli.py  — acrescentar
@@ -1587,12 +1587,12 @@ def featurize_cmd(
     )
 ```
 
-- [ ] **Step 5: Rodar os testes e confirmar que passam**
+- [x] **Step 5: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest pipelines/tests -v`
 Expected: PASS nos 10 testes (5 de ingest + 5 de featurize)
 
-- [ ] **Step 6: Commitar**
+- [x] **Step 6: Commitar**
 
 ```bash
 git add pipelines
@@ -1621,7 +1621,7 @@ git commit -m "feat(pipelines): featurize idempotente com cache por fingerprint"
 
 **Algoritmo:** agrupar faixas por `(gênero, artista)`; dentro de cada gênero, ordenar os artistas por número de faixas em ordem decrescente, com desempate pelo embaralhamento semeado; atribuir cada artista ao split cujo déficit em relação à cota-alvo daquele gênero for maior. Guloso, determinístico e garante disjunção por construção.
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # pipelines/tests/test_split.py
@@ -1696,12 +1696,12 @@ def test_propriedade_disjuncao_de_artista_vale_para_qualquer_acervo(tuplas):
             assert conjuntos[i] & conjuntos[j] == set()
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest pipelines/tests/test_split.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_pipelines.split'`
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 ```python
 # pipelines/src/youfy_pipelines/split.py
@@ -1813,7 +1813,7 @@ def run_split(
     return splits
 ```
 
-- [ ] **Step 4: Adicionar o comando à CLI**
+- [x] **Step 4: Adicionar o comando à CLI**
 
 ```python
 # pipelines/src/youfy_pipelines/cli.py  — acrescentar
@@ -1838,12 +1838,12 @@ def split_cmd(
     )
 ```
 
-- [ ] **Step 5: Rodar os testes e confirmar que passam**
+- [x] **Step 5: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest pipelines/tests/test_split.py -v`
 Expected: PASS nos 6 testes, incluindo o property-based
 
-- [ ] **Step 6: Commitar**
+- [x] **Step 6: Commitar**
 
 ```bash
 git add pipelines
