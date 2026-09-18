@@ -1,8 +1,8 @@
 site_name: Youfy
 site_description: Laboratório de IA e MLOps em formato de player musical
-site_author: osfarias
-repo_name: osfarias/youfy
-repo_url: https://github.com/osfarias/youfy
+site_author: oseiasdfarias
+repo_name: oseiasdfarias/youfy
+repo_url: https://github.com/oseiasdfarias/youfy
 
 theme:
   name: material
