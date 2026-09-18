@@ -373,7 +373,15 @@ body {
 .mermaid {
   background: transparent !important;
   text-align: center;
-  margin: 1.5rem 0;
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+.mermaid svg {
+  max-width: 100% !important;
+  min-width: min(100%, 480px);
+  height: auto !important;
+  font-family: var(--md-font-family) !important;
 }
 
 /* -------------------------------------------------------------

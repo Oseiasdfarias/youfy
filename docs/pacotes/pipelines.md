@@ -51,7 +51,7 @@ Exemplo de log emitido:
 O pacote `youfy-pipelines` coordena os 3 estágios determinísticos, conectando o catálogo relacional ao armazenamento de matrizes e partições de ML:
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph S1["1. Estágio: ingest"]
         FMA["Dump FMA (CSV + MP3s)"] --> CLI1["youfy pipeline ingest"]
         CLI1 --> Repo["youfy_catalog.repository"]

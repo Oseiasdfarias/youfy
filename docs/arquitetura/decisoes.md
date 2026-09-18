@@ -45,7 +45,7 @@ Trabalhar com um único usuário humano gera um ciclo de MLOps estatisticamente 
 - Ausência de volume para observar *drift* de distribuição.
 
 ```mermaid
-flowchart LR
+flowchart TD
     subgraph S_Sim["População Sintética"]
         Sim["Simulador de Usuários"] -->|Sessões de Escuta| Batch["Lotes de Eventos"]
         Batch -->|actor_kind='simulated'| Events[("Event Store (Postgres)")]
@@ -77,7 +77,7 @@ Em vez de iniciar por representações auto-supervisionadas difíceis de calibra
 - **Reaproveitamento de Embeddings:** A penúltima camada da rede servirá diretamente como embedding acústico para o recomendador *content-based* futuro (Spec 3).
 
 ```mermaid
-flowchart LR
+flowchart TD
     Audio["Áudio 30s"] --> Melspec["Mel-espectrograma (128, 1292)"]
     Melspec --> Conv["Camadas Convolucionais 2D + BatchNorm + ReLU"]
     Conv --> Pool["Adaptive Max/Avg Pooling"]
