@@ -201,6 +201,37 @@ body {
   background: var(--md-default-bg-color);
 }
 
+/* Grid Cards (Pillars & Links) */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid.cards > ol > li,
+.md-typeset .grid > .card {
+  border: 1px solid var(--vercel-border-color) !important;
+  border-radius: 10px !important;
+  background-color: var(--vercel-card-bg) !important;
+  transition: border-color 0.15s ease, transform 0.15s ease !important;
+  box-shadow: none !important;
+}
+
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid.cards > ol > li:hover,
+.md-typeset .grid > .card:hover {
+  border-color: var(--md-default-fg-color--light) !important;
+}
+
+[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li,
+[data-md-color-scheme="default"] .md-typeset .grid.cards > ol > li,
+[data-md-color-scheme="default"] .md-typeset .grid > .card {
+  background-color: #ffffff !important;
+  border-color: #e4e4e7 !important;
+}
+
+[data-md-color-scheme="default"] .md-typeset .grid.cards > ul > li:hover,
+[data-md-color-scheme="default"] .md-typeset .grid.cards > ol > li:hover,
+[data-md-color-scheme="default"] .md-typeset .grid > .card:hover {
+  border-color: #71717a !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+}
+
 /* -------------------------------------------------------------
  * AUDIO VISUALIZER & INTERACTIVE PLAYER STYLES
  * ------------------------------------------------------------- */
@@ -237,9 +268,86 @@ body {
   color: #ededed;
 }
 
-[data-md-color-scheme="default"] .youfy-player-card {
-  background: #09090b;
-  color: #ededed;
+.youfy-player-tag {
+  font-family: var(--md-font-code);
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #a1a1aa;
+  text-transform: uppercase;
+}
+
+.youfy-player-title {
+  margin: 0.4rem 0 0.1rem 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.youfy-player-sub {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #a1a1aa;
+}
+
+.youfy-player-ml-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  background: rgba(24, 24, 27, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-family: var(--md-font-code);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.youfy-player-model-version {
+  font-family: var(--md-font-code);
+  font-size: 0.7rem;
+  color: #71717a;
+  margin-top: 0.25rem;
+}
+
+.youfy-player-timebar {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--md-font-code);
+  font-size: 0.72rem;
+  color: #71717a;
+  margin-top: 0.4rem;
+}
+
+.youfy-player-controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.youfy-player-telemetry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--md-font-code);
+  font-size: 0.75rem;
+  color: #a1a1aa;
+}
+
+.youfy-player-telemetry strong {
+  color: #ffffff;
+}
+
+.youfy-telemetry-sep {
+  color: #52525b;
 }
 
 .youfy-player-waveform {
@@ -756,16 +864,48 @@ body {
   color: #18181b !important;
 }
 
-[data-md-color-scheme="default"] .youfy-player-card [style*="color: #ffffff"] {
-  color: #18181b !important;
+[data-md-color-scheme="default"] .youfy-player-tag {
+  background: #f4f4f5;
+  border-color: #e4e4e7;
+  color: #52525b;
 }
 
-[data-md-color-scheme="default"] .youfy-player-card [style*="color: #ededed"] {
-  color: #27272a !important;
+[data-md-color-scheme="default"] .youfy-player-title {
+  color: #09090b;
 }
 
-[data-md-color-scheme="default"] .youfy-player-card [style*="color: #a1a1aa"] {
-  color: #71717a !important;
+[data-md-color-scheme="default"] .youfy-player-sub {
+  color: #71717a;
+}
+
+[data-md-color-scheme="default"] .youfy-player-ml-badge {
+  background: #f4f4f5;
+  border-color: #e4e4e7;
+  color: #09090b;
+}
+
+[data-md-color-scheme="default"] .youfy-player-model-version {
+  color: #71717a;
+}
+
+[data-md-color-scheme="default"] .youfy-player-timebar {
+  color: #71717a;
+}
+
+[data-md-color-scheme="default"] .youfy-player-controls-bar {
+  border-top-color: #e4e4e7;
+}
+
+[data-md-color-scheme="default"] .youfy-player-telemetry {
+  color: #71717a;
+}
+
+[data-md-color-scheme="default"] .youfy-player-telemetry strong {
+  color: #09090b;
+}
+
+[data-md-color-scheme="default"] .youfy-telemetry-sep {
+  color: #d4d4d8;
 }
 
 [data-md-color-scheme="default"] .youfy-player-waveform {
@@ -862,12 +1002,17 @@ body {
 
 [data-md-color-scheme="default"] .mermaid .node rect,
 [data-md-color-scheme="default"] .mermaid .node circle,
-[data-md-color-scheme="default"] .mermaid .node polygon {
+[data-md-color-scheme="default"] .mermaid .node ellipse,
+[data-md-color-scheme="default"] .mermaid .node polygon,
+[data-md-color-scheme="default"] .mermaid .node path {
   fill: #fafafa !important;
   stroke: #d4d4d8 !important;
 }
 
-[data-md-color-scheme="default"] .mermaid .node .label {
+[data-md-color-scheme="default"] .mermaid .node .label,
+[data-md-color-scheme="default"] .mermaid .node text,
+[data-md-color-scheme="default"] .mermaid .node span,
+[data-md-color-scheme="default"] .mermaid text {
   color: #18181b !important;
   fill: #18181b !important;
 }
@@ -877,7 +1022,18 @@ body {
   stroke: #e4e4e7 !important;
 }
 
+[data-md-color-scheme="default"] .mermaid .cluster text,
+[data-md-color-scheme="default"] .mermaid .cluster span {
+  fill: #09090b !important;
+  color: #09090b !important;
+}
+
 [data-md-color-scheme="default"] .mermaid .edgePath .path {
+  stroke: #71717a !important;
+}
+
+[data-md-color-scheme="default"] .mermaid marker path {
+  fill: #71717a !important;
   stroke: #71717a !important;
 }
 
@@ -885,6 +1041,49 @@ body {
   background-color: #ffffff !important;
   color: #52525b !important;
 }
+
+[data-md-color-scheme="default"] .mermaid .edgeLabel p,
+[data-md-color-scheme="default"] .mermaid .edgeLabel span {
+  background-color: #ffffff !important;
+  color: #52525b !important;
+}
+
+/* Specific classDef overrides for Mermaid diagrams in light mode */
+[data-md-color-scheme="default"] .mermaid g[class*="stage"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="proc"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="dsp"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="train"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="val"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="test"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="storage"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="cli"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="l1"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="l2"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="l3"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="l4"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="simStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="humanStyle"] rect {
+  fill: #ffffff !important;
+}
+
+[data-md-color-scheme="default"] .mermaid g[class*="stage"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="proc"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="dsp"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="train"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="val"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="test"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="storage"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="cli"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="l1"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="l2"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="l3"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="l4"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="simStyle"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="humanStyle"] text {
+  fill: #09090b !important;
+  color: #09090b !important;
+}
+
 
 [data-md-color-scheme="default"] .youfy-ds-banner {
   background: #ffffff !important;

@@ -162,24 +162,24 @@ Experimente abaixo o reprodutor musical integrado com o componente de inferênci
   <!-- Track Header & ML Prediction -->
   <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
     <div>
-      <span style="font-family: var(--md-font-code); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); color: #a1a1aa; text-transform: uppercase;">
+      <span class="youfy-player-tag">
         fma:track:001005 • fma_small
       </span>
-      <h3 style="margin: 0.4rem 0 0.1rem 0; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; color: #ffffff;">
+      <h3 class="youfy-player-title">
         Aura of the Latent Valley
       </h3>
-      <p style="margin: 0; font-size: 0.82rem; color: #a1a1aa;">
+      <p class="youfy-player-sub">
         Synthetic Artist #14 • Album: Discrete Waveforms
       </p>
     </div>
 
     <!-- Live ML Prediction Badge -->
     <div style="text-align: right;">
-      <div style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; border-radius: 6px; background: rgba(24, 24, 27, 0.9); border: 1px solid rgba(255, 255, 255, 0.12); font-family: var(--md-font-code); font-size: 0.8rem; font-weight: 600; color: #ffffff;">
+      <div class="youfy-player-ml-badge">
         <span style="width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px rgba(34, 197, 94, 0.8);"></span>
         <span>Rock: 94.2%</span>
       </div>
-      <div style="font-family: var(--md-font-code); font-size: 0.7rem; color: #71717a; margin-top: 0.25rem;">
+      <div class="youfy-player-model-version">
         model_version: clf-v1.2
       </div>
     </div>
@@ -187,17 +187,17 @@ Experimente abaixo o reprodutor musical integrado com o componente de inferênci
 
   <!-- Real Spectrogram Waveform Bars (Web Audio FFT Powered) -->
   <div style="space-y: 0.5rem; margin-bottom: 1.25rem;">
-    <div class="youfy-player-waveform" style="padding: 0; background: #050507;">
+    <div class="youfy-player-waveform" style="padding: 0;">
       <canvas id="youfy-player-fft-canvas" class="youfy-fft-canvas" height="68"></canvas>
     </div>
-    <div style="display: flex; justify-content: space-between; font-family: var(--md-font-code); font-size: 0.72rem; color: #71717a; margin-top: 0.4rem;">
+    <div class="youfy-player-timebar">
       <span id="player-time">00:14</span>
       <span>-00:16 (30s FMA clip)</span>
     </div>
   </div>
 
   <!-- Controls Bar & Telemetry Indicator -->
-  <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1rem; flex-wrap: wrap; gap: 1rem;">
+  <div class="youfy-player-controls-bar">
     <!-- Large Prominent Play Button -->
     <button class="youfy-play-btn-hero" id="btn-player-play" onclick="togglePlaySynth()" title="Reproduzir / Pausar Áudio">
       <span id="player-play-icon" style="font-size: 1.35rem; line-height: 1; display: inline-flex; align-items: center;">▶</span>
@@ -205,11 +205,11 @@ Experimente abaixo o reprodutor musical integrado com o componente de inferênci
     </button>
 
     <!-- Telemetry Indicator -->
-    <div style="display: flex; align-items: center; gap: 0.5rem; font-family: var(--md-font-code); font-size: 0.75rem; color: #a1a1aa;">
+    <div class="youfy-player-telemetry">
       <span style="width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);"></span>
-      <span>actor: <strong style="color: #ffffff;">human:osfarias</strong></span>
-      <span style="color: #52525b;">|</span>
-      <span>surface: <strong style="color: #ffffff;">search</strong></span>
+      <span>actor: <strong>human:osfarias</strong></span>
+      <span class="youfy-telemetry-sep">|</span>
+      <span>surface: <strong>search</strong></span>
     </div>
   </div>
 </div>
