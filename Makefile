@@ -1,4 +1,4 @@
-.PHONY: setup up down lint test ingest featurize split
+.PHONY: setup up down lint test ingest featurize split e2e dvc-push
 
 setup:
 	uv sync --all-extras
@@ -23,3 +23,10 @@ featurize:
 
 split:
 	uv run youfy pipeline split
+
+e2e:
+	uv run pytest pipelines/tests/test_pipeline_e2e.py -v
+
+dvc-push:
+	uv run dvc add data/features data/splits && uv run dvc push
+

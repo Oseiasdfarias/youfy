@@ -41,7 +41,7 @@
 - Consumes: nada.
 - Produces: o workspace `uv` com os três pacotes instaláveis em modo editável, e um Postgres alcançável em `postgresql://youfy:youfy@localhost:5433/youfy`.
 
-- [ ] **Step 1: Escrever o teste que falha**
+- [x] **Step 1: Escrever o teste que falha**
 
 ```python
 # tests/test_workspace.py
@@ -60,12 +60,12 @@ def test_audio_nao_importa_catalog_nem_pipelines():
     assert "youfy_pipelines" not in fontes
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falha**
+- [x] **Step 2: Rodar e confirmar que falha**
 
 Run: `uv run pytest tests/test_workspace.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_audio'`
 
-- [ ] **Step 3: Criar o workspace uv**
+- [x] **Step 3: Criar o workspace uv**
 
 ```toml
 # pyproject.toml (raiz)
@@ -156,7 +156,7 @@ build-backend = "hatchling.build"
 
 Crie os três `src/<pacote>/__init__.py` vazios.
 
-- [ ] **Step 4: Criar o docker-compose e o .env.example**
+- [x] **Step 4: Criar o docker-compose e o .env.example**
 
 ```yaml
 # docker-compose.yml
@@ -199,12 +199,12 @@ data/
 .ruff_cache/
 ```
 
-- [ ] **Step 5: Rodar os testes e confirmar que passam**
+- [x] **Step 5: Rodar os testes e confirmar que passam**
 
 Run: `uv sync --all-extras && uv run pytest tests/test_workspace.py -v`
 Expected: PASS nos dois testes
 
-- [ ] **Step 6: Criar o Makefile e o CI**
+- [x] **Step 6: Criar o Makefile e o CI**
 
 ```makefile
 # Makefile
@@ -265,7 +265,7 @@ jobs:
       - run: uv run pytest -v
 ```
 
-- [ ] **Step 7: Verificar que o CI local passa e commitar**
+- [x] **Step 7: Verificar que o CI local passa e commitar**
 
 Run: `make up && make lint && make test`
 Expected: Postgres saudável, ruff limpo, testes passando
@@ -292,7 +292,7 @@ git commit -m "chore: scaffold do workspace uv, postgres local e pipeline de ci"
   - `FeatureSpec(sample_rate:int=22050, n_fft:int=2048, hop_length:int=512, n_mels:int=128, n_frames:int=1292, fmin:float=0.0, fmax:float|None=None)` — dataclass congelada, com `.fingerprint() -> str` (16 hex) e `.effective_fmax -> float`.
   - `compute_melspec(samples: np.ndarray, sample_rate: int, spec: FeatureSpec) -> np.ndarray` — retorna `float32` de shape `(spec.n_mels, spec.n_frames)`, em dB.
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/audio/tests/test_spec.py
@@ -361,12 +361,12 @@ def test_sample_rate_divergente_e_erro_ruidoso():
         compute_melspec(_seno(440.0, 1.0, 16000), 16000, spec)
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/audio/tests -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_audio.spec'`
 
-- [ ] **Step 3: Implementar a FeatureSpec**
+- [x] **Step 3: Implementar a FeatureSpec**
 
 ```python
 # packages/audio/src/youfy_audio/spec.py
@@ -402,7 +402,7 @@ class FeatureSpec:
         return hashlib.sha256(payload).hexdigest()[:16]
 ```
 
-- [ ] **Step 4: Implementar o melspec**
+- [x] **Step 4: Implementar o melspec**
 
 ```python
 # packages/audio/src/youfy_audio/melspec.py
@@ -447,12 +447,12 @@ def _ajustar_frames(db: np.ndarray, n_frames: int) -> np.ndarray:
     return np.concatenate([db, preenchimento], axis=1)
 ```
 
-- [ ] **Step 5: Rodar os testes e confirmar que passam**
+- [x] **Step 5: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/audio/tests -v`
 Expected: PASS nos 8 testes
 
-- [ ] **Step 6: Commitar**
+- [x] **Step 6: Commitar**
 
 ```bash
 git add packages/audio
@@ -478,7 +478,7 @@ git commit -m "feat(audio): FeatureSpec com fingerprint e melspec deterministico
 
 `probe` existe separado de `decode` porque a ingestão precisa validar 8.000 arquivos sem pagar o custo de decodificar todos.
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/audio/tests/test_decode.py
@@ -527,12 +527,12 @@ def test_decode_em_arquivo_corrompido_levanta_unreadable(wav_corrompido):
         decode(wav_corrompido, target_sample_rate=22050)
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/audio/tests/test_decode.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_audio.decode'`
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 ```python
 # packages/audio/src/youfy_audio/errors.py
@@ -582,12 +582,12 @@ def decode(path: str | Path, target_sample_rate: int) -> np.ndarray:
     return np.asarray(samples, dtype=np.float32)
 ```
 
-- [ ] **Step 4: Rodar os testes e confirmar que passam**
+- [x] **Step 4: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/audio/tests -v`
 Expected: PASS nos 13 testes (8 anteriores + 5 novos)
 
-- [ ] **Step 5: Commitar**
+- [x] **Step 5: Commitar**
 
 ```bash
 git add packages/audio
@@ -614,7 +614,7 @@ git commit -m "feat(audio): probe barato e decode com erro tipado"
 
 A tabela `features` guarda `spec_fingerprint`, o que permite conviverem features de configs diferentes sem apagar nada.
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # conftest.py  (raiz do repositorio: estas fixtures precisam valer para todos os pacotes)
@@ -697,12 +697,12 @@ def test_feature_e_unica_por_track_e_fingerprint(session):
         session.flush()
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `make up && uv run pytest packages/catalog/tests -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_catalog.models'`
 
-- [ ] **Step 3: Implementar settings e sessão**
+- [x] **Step 3: Implementar settings e sessão**
 
 ```python
 # packages/catalog/src/youfy_catalog/settings.py
@@ -749,7 +749,7 @@ def session_scope() -> Iterator[Session]:
         session.close()
 ```
 
-- [ ] **Step 4: Implementar os modelos**
+- [x] **Step 4: Implementar os modelos**
 
 ```python
 # packages/catalog/src/youfy_catalog/models.py
@@ -832,12 +832,12 @@ class Feature(Base):
     )
 ```
 
-- [ ] **Step 5: Rodar os testes e confirmar que passam**
+- [x] **Step 5: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/catalog/tests -v`
 Expected: PASS nos 5 testes
 
-- [ ] **Step 6: Gerar a migration inicial e verificar que ela reproduz o schema**
+- [x] **Step 6: Gerar a migration inicial e verificar que ela reproduz o schema**
 
 ```bash
 cd packages/catalog
@@ -880,7 +880,7 @@ uv run alembic check   # deve reportar que não há diferença pendente
 
 Expected: `alembic check` sem diferenças — o schema dos modelos e o da migration batem
 
-- [ ] **Step 7: Commitar**
+- [x] **Step 7: Commitar**
 
 ```bash
 git add packages/catalog
@@ -911,7 +911,7 @@ git commit -m "feat(catalog): modelo de dados do acervo e migration inicial"
 
 `read_tracks_csv` precisa lidar com o cabeçalho de dois níveis do `tracks.csv` do FMA — é o detalhe que mais derruba quem encosta nesse dataset pela primeira vez.
 
-- [ ] **Step 1: Escrever o construtor de fixture e os testes que falham**
+- [x] **Step 1: Escrever o construtor de fixture e os testes que falham**
 
 ```python
 # packages/catalog/src/youfy_catalog/testing.py
@@ -1026,12 +1026,12 @@ def test_record_failure_persiste(session):
     assert session.query(IngestFailure).one().reason == "unreadable_audio"
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/catalog/tests/test_fma.py packages/catalog/tests/test_repository.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_catalog.fma'`
 
-- [ ] **Step 3: Implementar o leitor do FMA**
+- [x] **Step 3: Implementar o leitor do FMA**
 
 ```python
 # packages/catalog/src/youfy_catalog/fma.py
@@ -1083,7 +1083,7 @@ def _vazio(valor) -> bool:
     return valor is None or (isinstance(valor, float) and math.isnan(valor)) or valor == ""
 ```
 
-- [ ] **Step 4: Implementar o repositório**
+- [x] **Step 4: Implementar o repositório**
 
 ```python
 # packages/catalog/src/youfy_catalog/repository.py
@@ -1123,12 +1123,12 @@ def record_failure(session: Session, *, source_ref: str, reason: str, detail: st
     session.add(IngestFailure(source_ref=source_ref, reason=reason, detail=detail))
 ```
 
-- [ ] **Step 5: Rodar os testes e confirmar que passam**
+- [x] **Step 5: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/catalog/tests -v`
 Expected: PASS nos 11 testes
 
-- [ ] **Step 6: Commitar**
+- [x] **Step 6: Commitar**
 
 ```bash
 git add packages/catalog
@@ -1866,7 +1866,7 @@ git commit -m "feat(pipelines): split agrupado por artista com invariante testad
 - Consumes: `run_ingest` (Task 6), `run_featurize` (Task 7), `run_split` (Task 8), `build_fma_fixture` (Task 5).
 - Produces: `make e2e` verde, e `data/features` + `data/splits` sob versionamento DVC.
 
-- [ ] **Step 1: Escrever o teste ponta a ponta que falha**
+- [x] **Step 1: Escrever o teste ponta a ponta que falha**
 
 ```python
 # pipelines/tests/test_pipeline_e2e.py
@@ -1948,7 +1948,7 @@ def test_pipeline_e_retomavel_a_partir_de_qualquer_estagio(session, tmp_path):
     assert a == b
 ```
 
-- [ ] **Step 2: Rodar o e2e**
+- [x] **Step 2: Rodar o e2e**
 
 Este teste é rede de regressão sobre comportamento que já existe, não um ciclo
 red-green: os três estágios foram construídos nas Tasks 6 a 8. O resultado
@@ -1958,7 +1958,7 @@ esperado é PASS. Se falhar, o defeito é de **integração entre estágios** �
 Run: `uv run pytest pipelines/tests/test_pipeline_e2e.py -v --durations=5`
 Expected: PASS nos 2 testes, abaixo de 2 minutos
 
-- [ ] **Step 3: Diagnosticar, se falhar**
+- [x] **Step 3: Diagnosticar, se falhar**
 
 Corrija sempre no estágio culpado, nunca no teste. Os três modos de falha prováveis:
 
@@ -1968,7 +1968,7 @@ Corrija sempre no estágio culpado, nunca no teste. Os três modos de falha prov
 | Contagem do split menor que `ingest.ingested` | `run_split` filtra por `Feature.spec_fingerprint` e a `FeatureSpec` dos dois estágios não é a mesma config |
 | Conjuntos de artista se cruzam | Regressão no `make_splits`; rode `pytest pipelines/tests/test_split.py` antes, para isolar |
 
-- [ ] **Step 4: Inicializar o DVC**
+- [x] **Step 4: Inicializar o DVC**
 
 ```bash
 uv add dvc
@@ -1985,7 +1985,7 @@ data/raw/
 
 `data/raw/` fica de fora de propósito: o dump do FMA é imutável e grande, rastreado pelo manifesto de ingestão e pelo hash dos arquivos, não duplicado no DVC.
 
-- [ ] **Step 5: Acrescentar os alvos ao Makefile**
+- [x] **Step 5: Acrescentar os alvos ao Makefile**
 
 ```makefile
 # Makefile — acrescentar
@@ -1999,7 +1999,7 @@ dvc-push:
 	uv run dvc add data/features data/splits && uv run dvc push
 ```
 
-- [ ] **Step 6: Rodar o CI completo e escrever o README**
+- [x] **Step 6: Rodar o CI completo e escrever o README**
 
 Acrescente o passo do e2e ao `.github/workflows/ci.yml`, depois de `uv run pytest -v`:
 
@@ -2034,7 +2034,7 @@ youfy pipeline split --seed 42
 ```
 ````
 
-- [ ] **Step 7: Verificar tudo e commitar**
+- [x] **Step 7: Verificar tudo e commitar**
 
 Run: `make lint && make test && make e2e`
 Expected: ruff limpo; toda a suíte verde; e2e abaixo de 2 minutos

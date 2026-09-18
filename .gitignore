@@ -2,8 +2,11 @@
 __pycache__/
 *.pyc
 .env
-data/
+data/*
 !data/.gitkeep
+!data/*.dvc
+!data/**/*.dvc
 .pytest_cache/
 .ruff_cache/
 .bin/
+

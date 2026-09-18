@@ -3,9 +3,10 @@ name = "youfy"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
-  "youfy-audio",
-  "youfy-catalog",
-  "youfy-pipelines",
+    "dvc>=3.67.1",
+    "youfy-audio",
+    "youfy-catalog",
+    "youfy-pipelines",
 ]
 
 [project.optional-dependencies]
@@ -33,4 +34,3 @@ dev-mode-dirs = ["."]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-

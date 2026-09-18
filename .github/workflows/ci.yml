@@ -24,3 +24,5 @@ jobs:
       - run: uv sync --all-extras
       - run: uv run ruff check .
       - run: uv run pytest -v
+      - run: uv run pytest pipelines/tests/test_pipeline_e2e.py -v --durations=5
+
