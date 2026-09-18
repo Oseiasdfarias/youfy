@@ -22,3 +22,4 @@ youfy pipeline ingest --dump-dir ./data/raw/fma
 youfy pipeline featurize
 youfy pipeline split --seed 42
 ```
+

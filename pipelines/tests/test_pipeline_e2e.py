@@ -3,6 +3,7 @@
 É o teste que pega o que os unitários não pegam: incompatibilidade entre
 estágios e mudança de formato de artefato.
 """
+
 import json
 
 from youfy_audio.spec import FeatureSpec
@@ -14,17 +15,19 @@ from youfy_pipelines.split import run_split, splits_dir
 
 GENEROS = ["Rock", "Jazz", "Folk"]
 
+
 def _micro_dump(tmp_path):
     faixas = []
     track_id = 2
     for g, genero in enumerate(GENEROS):
-        for a in range(8):                       # 8 artistas por gênero
-            for _ in range(3):                   # 3 faixas por artista
+        for a in range(8):  # 8 artistas por gênero
+            for _ in range(3):  # 3 faixas por artista
                 faixas.append(FixtureTrack(track_id, g * 100 + a, f"Artista {g}-{a}", genero))
                 track_id += 1
     faixas.append(FixtureTrack(track_id, 999, "Artista Ruim", "Rock", corrompido=True))
     build_fma_fixture(tmp_path, faixas)
     return len(faixas)
+
 
 def test_pipeline_completo_no_micro_dump(session, tmp_path):
     total = _micro_dump(tmp_path)
@@ -56,6 +59,7 @@ def test_pipeline_completo_no_micro_dump(session, tmp_path):
     assert conjuntos[0] & conjuntos[1] == set()
     assert conjuntos[0] & conjuntos[2] == set()
     assert conjuntos[1] & conjuntos[2] == set()
+
 
 def test_pipeline_e_retomavel_a_partir_de_qualquer_estagio(session, tmp_path):
     _micro_dump(tmp_path)
