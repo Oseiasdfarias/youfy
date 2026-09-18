@@ -430,46 +430,86 @@ function nextTrack() {
 
 O Youfy implementa um ciclo de dados unidirecional e rigoroso:
 
-```mermaid
-flowchart TD
-    subgraph S_Data["1. Catálogo & Extração Acústica"]
-        direction TB
-        FMA["Free Music Archive (fma_small)"] --> Ingest["youfy pipeline ingest"]
-        Ingest --> DB[("PostgreSQL 16 (Catalog)")]
-        Ingest -.-> Quarantine[("ingest_failures (Quarentena)")]
-        Ingest --> Feat["youfy pipeline featurize"]
-        Feat --> MelStore[("data/features/*.npy + DVC Remote")]
-    end
+<div class="youfy-arch-pipeline">
+  <!-- Stage 1 -->
+  <div class="youfy-arch-stage">
+    <div class="youfy-arch-stage-header">
+      <div class="youfy-arch-stage-title">
+        <span style="color: #ff5500;">01.</span>
+        <span>Fundação de Dados &amp; Extração Acústica</span>
+      </div>
+      <span class="youfy-arch-stage-badge">offline-first • spec-1</span>
+    </div>
+    <div class="youfy-arch-flow">
+      <div class="youfy-arch-node">
+        <div class="youfy-arch-node-name">Free Music Archive</div>
+        <div class="youfy-arch-node-desc">Dataset fma_small com 8.000 faixas de 30s balanceadas em 8 gêneros.</div>
+      </div>
+      <div class="youfy-arch-node">
+        <div class="youfy-arch-node-name">youfy pipeline ingest</div>
+        <div class="youfy-arch-node-desc">Leitura idempotente no Postgres 16 com quarentena de falhas em ingest_failures.</div>
+      </div>
+      <div class="youfy-arch-node">
+        <div class="youfy-arch-node-name">youfy pipeline featurize</div>
+        <div class="youfy-arch-node-desc">Espectrogramas mel (128, 1292) .npy organizados por hash SHA-256 e DVC.</div>
+      </div>
+    </div>
+  </div>
 
-    subgraph S_MLOps["2. Particionamento & Treinamento"]
-        direction TB
-        MelStore --> Split["youfy pipeline split (Disjunção de Artistas)"]
-        Split --> Partitions[("splits/{train,val,test}.parquet")]
-        Partitions --> Train["Treino PyTorch (CNN 2D Acústica)"]
-        Train --> Registry[("MLflow Model Registry (Métricas & Artefatos)")]
-    end
+  <div class="youfy-arch-connector">↓</div>
 
-    subgraph S_Serving["3. Serving & Closed-Loop Telemetria"]
-        direction TB
-        Registry --> Gate{"Gate de Promoção (Macro-F1 & Invariantes)"}
-        Gate -->|Aprovado| Server["FastAPI Serving (/tracks/{id}/genre)"]
-        Server --> Player["Youfy Player (Web / TUI)"]
-        Player --> Telemetry["POST /events (play_start, skip, complete)"]
-        Telemetry --> EventStore[("Postgres: Event Store (Append-Only)")]
-    end
+  <!-- Stage 2 -->
+  <div class="youfy-arch-stage">
+    <div class="youfy-arch-stage-header">
+      <div class="youfy-arch-stage-title">
+        <span style="color: #ff5500;">02.</span>
+        <span>Particionamento MLOps &amp; Treinamento PyTorch</span>
+      </div>
+      <span class="youfy-arch-stage-badge">invariantes • dvc • mlflow</span>
+    </div>
+    <div class="youfy-arch-flow">
+      <div class="youfy-arch-node">
+        <div class="youfy-arch-node-name">youfy pipeline split</div>
+        <div class="youfy-arch-node-desc">Disjunção estrita de artistas por construção: Interseção = ∅ entre train/val/test.</div>
+      </div>
+      <div class="youfy-arch-node">
+        <div class="youfy-arch-node-name">PyTorch CNN 2D</div>
+        <div class="youfy-arch-node-desc">Treino supervisionado sobre mel-espectrogramas com extração de embeddings 256d.</div>
+      </div>
+      <div class="youfy-arch-node">
+        <div class="youfy-arch-node-name">MLflow Model Registry</div>
+        <div class="youfy-arch-node-desc">Rastreamento de métricas (Macro-F1) e registro de artefatos de modelo versionados.</div>
+      </div>
+    </div>
+  </div>
 
-    S_Data ==> S_MLOps
-    S_MLOps ==> S_Serving
+  <div class="youfy-arch-connector">↓</div>
 
-    classDef stage fill:#18181b,stroke:#3b82f6,stroke-width:1.5px,color:#f4f4f5;
-    classDef storage fill:#09090b,stroke:#10b981,stroke-width:1.5px,color:#34d399;
-    classDef action fill:#27272a,stroke:#ff5500,stroke-width:2px,color:#ffffff;
-    classDef gate fill:#27272a,stroke:#a855f7,stroke-width:1.5px,color:#e4e4e7;
-    
-    class Ingest,Feat,Split,Train,Server,Player,Telemetry action;
-    class DB,Quarantine,MelStore,Partitions,Registry,EventStore storage;
-    class Gate gate;
-```
+  <!-- Stage 3 -->
+  <div class="youfy-arch-stage">
+    <div class="youfy-arch-stage-header">
+      <div class="youfy-arch-stage-title">
+        <span style="color: #ff5500;">03.</span>
+        <span>Serving HTTP, Player &amp; Telemetria em Closed-Loop</span>
+      </div>
+      <span class="youfy-arch-stage-badge">fastapi • feedback loop</span>
+    </div>
+    <div class="youfy-arch-flow">
+      <div class="youfy-arch-node">
+        <div class="youfy-arch-node-name">FastAPI Model Serving</div>
+        <div class="youfy-arch-node-desc">Rota /tracks/{id}/genre com validação estrita de FeatureSpec em produção.</div>
+      </div>
+      <div class="youfy-arch-node">
+        <div class="youfy-arch-node-name">Youfy Player (Web / TUI)</div>
+        <div class="youfy-arch-node-desc">Reprodução em tempo real com visualizador de espectro FFT e telemetria offline-ready.</div>
+      </div>
+      <div class="youfy-arch-node">
+        <div class="youfy-arch-node-name">Event Store (Postgres)</div>
+        <div class="youfy-arch-node-desc">POST /events append-only idempotente fechando o loop de aprendizado contínuo.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 ---
 
