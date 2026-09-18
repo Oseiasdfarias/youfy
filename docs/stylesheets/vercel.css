@@ -694,3 +694,222 @@ body {
   border-radius: 50%;
 }
 
+/* -------------------------------------------------------------
+ * LIGHT THEME ADAPTATIONS FOR INTERACTIVE COMPONENTS & ANIMATIONS
+ * ------------------------------------------------------------- */
+[data-md-color-scheme="default"] .youfy-hero-banner {
+  background: #ffffff;
+  border-color: #e4e4e7;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+}
+
+[data-md-color-scheme="default"] .youfy-hero-grid {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+[data-md-color-scheme="default"] .youfy-hero-glow {
+  background: radial-gradient(circle, rgba(255, 85, 0, 0.08) 0%, rgba(0, 0, 0, 0.02) 50%, transparent 70%);
+}
+
+[data-md-color-scheme="default"] .youfy-hero-badge {
+  background: #f4f4f5;
+  border-color: #e4e4e7;
+  color: #52525b;
+}
+
+[data-md-color-scheme="default"] .youfy-hero-badge span:nth-child(2) {
+  color: #18181b !important;
+}
+
+[data-md-color-scheme="default"] .youfy-hero-logo-box {
+  background: #ffffff;
+  border-color: #e4e4e7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+[data-md-color-scheme="default"] .youfy-hero-logo-box svg path {
+  fill: #09090b;
+}
+
+[data-md-color-scheme="default"] .youfy-hero-brand {
+  color: #09090b;
+}
+
+[data-md-color-scheme="default"] .youfy-hero-sub {
+  color: #71717a;
+}
+
+[data-md-color-scheme="default"] .youfy-hero-bar {
+  background: #18181b;
+}
+
+[data-md-color-scheme="default"] .youfy-hero-bar:nth-child(even) {
+  background: #71717a;
+}
+
+[data-md-color-scheme="default"] .youfy-player-card {
+  background: #ffffff !important;
+  border-color: #e4e4e7 !important;
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.08) !important;
+  color: #18181b !important;
+}
+
+[data-md-color-scheme="default"] .youfy-player-card [style*="color: #ffffff"] {
+  color: #18181b !important;
+}
+
+[data-md-color-scheme="default"] .youfy-player-card [style*="color: #ededed"] {
+  color: #27272a !important;
+}
+
+[data-md-color-scheme="default"] .youfy-player-card [style*="color: #a1a1aa"] {
+  color: #71717a !important;
+}
+
+[data-md-color-scheme="default"] .youfy-player-waveform {
+  background: #f4f4f5;
+  border-color: #e4e4e7;
+}
+
+[data-md-color-scheme="default"] .youfy-ctrl-btn {
+  background: #f4f4f5;
+  border-color: #e4e4e7;
+  color: #18181b;
+}
+
+[data-md-color-scheme="default"] .youfy-ctrl-btn:hover {
+  background: #e4e4e7;
+  color: #000000;
+}
+
+[data-md-color-scheme="default"] .youfy-play-btn-hero,
+[data-md-color-scheme="default"] .youfy-play-btn-pill {
+  background: #09090b;
+  color: #ffffff;
+  border-color: #09090b;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+[data-md-color-scheme="default"] .youfy-play-btn-hero:hover,
+[data-md-color-scheme="default"] .youfy-play-btn-pill:hover {
+  background: #27272a;
+}
+
+[data-md-color-scheme="default"] .youfy-play-btn-circle {
+  background: #09090b;
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+[data-md-color-scheme="default"] .youfy-play-btn-circle:hover {
+  background: #27272a;
+}
+
+[data-md-color-scheme="default"] .youfy-arch-stage {
+  background: #ffffff;
+  border-color: #e4e4e7;
+}
+
+[data-md-color-scheme="default"] .youfy-arch-stage-title {
+  color: #09090b;
+}
+
+[data-md-color-scheme="default"] .youfy-arch-stage-badge {
+  background: #f4f4f5;
+  border-color: #e4e4e7;
+  color: #52525b;
+}
+
+[data-md-color-scheme="default"] .youfy-arch-node {
+  background: #fafafa;
+  border-color: #e4e4e7;
+}
+
+[data-md-color-scheme="default"] .youfy-arch-node-name {
+  color: #09090b;
+}
+
+[data-md-color-scheme="default"] .youfy-arch-interactive-container {
+  background: #ffffff;
+  border-color: #e4e4e7;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
+}
+
+[data-md-color-scheme="default"] .youfy-arch-interactive-header {
+  border-bottom-color: #f4f4f5;
+}
+
+[data-md-color-scheme="default"] .youfy-arch-interactive-title {
+  color: #18181b;
+}
+
+[data-md-color-scheme="default"] .youfy-arch-canvas-wrap {
+  background: radial-gradient(circle at 50% 30%, #ffffff 0%, #f8f8fa 70%, #f1f1f4 100%);
+  border-color: #e4e4e7;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.03);
+}
+
+[data-md-color-scheme="default"] .youfy-arch-interactive-legend {
+  color: #52525b;
+}
+
+/* Light Theme Support for Mermaid */
+[data-md-color-scheme="default"] .mermaid svg {
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.04));
+}
+
+[data-md-color-scheme="default"] .mermaid .node rect,
+[data-md-color-scheme="default"] .mermaid .node circle,
+[data-md-color-scheme="default"] .mermaid .node polygon {
+  fill: #fafafa !important;
+  stroke: #d4d4d8 !important;
+}
+
+[data-md-color-scheme="default"] .mermaid .node .label {
+  color: #18181b !important;
+  fill: #18181b !important;
+}
+
+[data-md-color-scheme="default"] .mermaid .cluster rect {
+  fill: #f4f4f5 !important;
+  stroke: #e4e4e7 !important;
+}
+
+[data-md-color-scheme="default"] .mermaid .edgePath .path {
+  stroke: #71717a !important;
+}
+
+[data-md-color-scheme="default"] .mermaid .edgeLabel {
+  background-color: #ffffff !important;
+  color: #52525b !important;
+}
+
+[data-md-color-scheme="default"] .youfy-ds-banner {
+  background: #ffffff !important;
+  border-color: #e4e4e7 !important;
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-md-color-scheme="default"] .youfy-ds-banner svg rect[fill="#09090B"] {
+  fill: #ffffff;
+}
+
+[data-md-color-scheme="default"] .youfy-ds-banner svg rect[fill="#121215"],
+[data-md-color-scheme="default"] .youfy-ds-banner svg rect[fill="#101014"] {
+  fill: #fafafa;
+}
+
+[data-md-color-scheme="default"] .youfy-ds-banner svg text[fill="#FFFFFF"] {
+  fill: #09090b;
+}
+
+[data-md-color-scheme="default"] .youfy-ds-banner svg path[fill="#FFFFFF"] {
+  fill: #09090b;
+}
+
+[data-md-color-scheme="default"] .youfy-ds-banner svg *[stroke="#27272A"] {
+  stroke: #e4e4e7;
+}
+

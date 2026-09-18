@@ -93,10 +93,12 @@
     const h = canvas.height;
     const midY = h * 0.68;
 
+    const isLight = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+
     // Draw secondary subtle wave (ambient noise)
     ctx.beginPath();
     ctx.lineWidth = 1.2;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)';
     for (let x = 0; x < w; x += 3) {
       const y = midY + Math.sin(x * 0.015 + phase * 0.7) * 16 + Math.sin(x * 0.03 - phase * 0.4) * 8;
       if (x === 0) ctx.moveTo(x, y);
@@ -108,10 +110,17 @@
     ctx.beginPath();
     ctx.lineWidth = 2;
     const grad = ctx.createLinearGradient(0, 0, w, 0);
-    grad.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
-    grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.65)');
-    grad.addColorStop(0.85, 'rgba(255, 85, 0, 0.85)');
-    grad.addColorStop(1, 'rgba(255, 85, 0, 0.2)');
+    if (isLight) {
+      grad.addColorStop(0, 'rgba(0, 0, 0, 0.1)');
+      grad.addColorStop(0.5, 'rgba(0, 0, 0, 0.7)');
+      grad.addColorStop(0.85, 'rgba(255, 85, 0, 0.9)');
+      grad.addColorStop(1, 'rgba(255, 85, 0, 0.3)');
+    } else {
+      grad.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+      grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.65)');
+      grad.addColorStop(0.85, 'rgba(255, 85, 0, 0.85)');
+      grad.addColorStop(1, 'rgba(255, 85, 0, 0.2)');
+    }
     ctx.strokeStyle = grad;
 
     for (let x = 0; x < w; x += 3) {
@@ -246,20 +255,22 @@ function drawPlayerIdle() {
     0.45, 0.28, 0.36, 0.20, 0.30, 0.45, 0.25, 0.18
   ];
 
+  const isLight = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+
   for (let i = 0; i < numBars; i++) {
     const bh = Math.max(4, mockHeights[i % mockHeights.length] * (h - 10));
     const x = i * (barWidth + barGap);
     const y = h - bh;
 
     if (i < currentIdx) {
-      pCtx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      pCtx.fillStyle = isLight ? 'rgba(0, 0, 0, 0.85)' : 'rgba(255, 255, 255, 0.85)';
       pCtx.shadowBlur = 0;
     } else if (i === currentIdx) {
       pCtx.fillStyle = '#ff5500';
       pCtx.shadowColor = '#ff5500';
       pCtx.shadowBlur = 8;
     } else {
-      pCtx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+      pCtx.fillStyle = isLight ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.2)';
       pCtx.shadowBlur = 0;
     }
 
@@ -360,6 +371,7 @@ function startSynth() {
       const h = pCanvas.height;
       pCtx.clearRect(0, 0, w, h);
 
+      const isLightMode = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
       const barGap = 3;
       const barWidth = Math.max(3, (w - (bufferLength - 1) * barGap) / bufferLength);
       const progressIdx = Math.floor((currentSeconds / totalSeconds) * bufferLength);
@@ -373,7 +385,7 @@ function startSynth() {
         const y = h - bh;
 
         if (i < progressIdx) {
-          pCtx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+          pCtx.fillStyle = isLightMode ? 'rgba(0, 0, 0, 0.95)' : 'rgba(255, 255, 255, 0.95)';
           pCtx.shadowBlur = 0;
         } else if (i === progressIdx) {
           pCtx.fillStyle = '#ff5500';
@@ -382,7 +394,7 @@ function startSynth() {
         } else {
           // Future unplayed bars pulse with softer ambient level
           const softAlpha = 0.15 + (binValue / 255) * 0.35;
-          pCtx.fillStyle = `rgba(255, 255, 255, ${softAlpha.toFixed(2)})`;
+          pCtx.fillStyle = isLightMode ? `rgba(0, 0, 0, ${softAlpha.toFixed(2)})` : `rgba(255, 255, 255, ${softAlpha.toFixed(2)})`;
           pCtx.shadowBlur = 0;
         }
 
@@ -517,10 +529,12 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
   }
 
   function drawNode(n) {
+    const isLight = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+    
     // Card background
-    ctx.fillStyle = '#111116';
+    ctx.fillStyle = isLight ? '#ffffff' : '#111116';
     ctx.strokeStyle = n.color;
-    ctx.lineWidth = 1.2;
+    ctx.lineWidth = isLight ? 1.5 : 1.2;
     
     ctx.beginPath();
     ctx.roundRect(n.x - n.w / 2, n.y - n.h / 2, n.w, n.h, 8);
@@ -529,7 +543,7 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
 
     // Subtle glow
     ctx.shadowColor = n.color;
-    ctx.shadowBlur = 8;
+    ctx.shadowBlur = isLight ? 4 : 8;
     ctx.stroke();
     ctx.shadowBlur = 0; // reset
 
@@ -539,12 +553,12 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
     ctx.fillText(n.icon, n.x - n.w / 2 + 10, n.y - 4);
 
     // Label
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = isLight ? '#09090b' : '#ffffff';
     ctx.font = '600 11.5px Inter, -apple-system, sans-serif';
     ctx.fillText(n.label, n.x - n.w / 2 + 32, n.y - 5);
 
     // Subtitle
-    ctx.fillStyle = '#9ca3af';
+    ctx.fillStyle = isLight ? '#64748b' : '#9ca3af';
     ctx.font = '9.5px Inter, -apple-system, sans-serif';
     ctx.fillText(n.sub, n.x - n.w / 2 + 10, n.y + 14);
   }
@@ -554,7 +568,8 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
     const toNode = getNode(link.to);
     if (!fromNode || !toNode) return;
 
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+    const isLight = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+    ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.12)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
 
@@ -605,8 +620,10 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
   function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    const isLight = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+
     // Draw grid background subtle dots
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.fillStyle = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.04)';
     for (let x = 20; x < canvas.width; x += 30) {
       for (let y = 20; y < canvas.height; y += 30) {
         ctx.beginPath();
@@ -629,7 +646,7 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
 
       ctx.fillStyle = link.color;
       ctx.shadowColor = link.color;
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = isLight ? 6 : 10;
       ctx.beginPath();
       ctx.arc(pos.x, pos.y, p.size, 0, Math.PI * 2);
       ctx.fill();
@@ -641,7 +658,7 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
 
     // Draw Stage markers
     ctx.font = '600 10px var(--md-font-code, monospace)';
-    ctx.fillStyle = '#6b7280';
+    ctx.fillStyle = isLight ? '#64748b' : '#6b7280';
     ctx.fillText('ESTÁGIO 1: ENGENHARIA DE DADOS & ACÚSTICA', 50, 30);
     ctx.fillText('ESTÁGIO 2: MLOPS, PARTIÇÃO & TREINO PYTORCH', 440, 160);
     ctx.fillText('ESTÁGIO 3: SERVING, PLAYER REAL & CLOSED-LOOP RETRAINING', 50, 300);

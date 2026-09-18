@@ -9,7 +9,7 @@ Esta documentação consolida os princípios de design, identidade visual, compo
 A identidade do Youfy é ancorada na união entre o minimalismo industrial suíço (estilo Vercel / Dieter Rams) e o processamento de sinais de áudio de alta precisão:
 
 <div align="center" style="margin: 2rem 0;">
-  <div style="border-radius: 12px; border: 1px solid var(--vercel-border-color); overflow: hidden; max-width: 1000px; box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.7); background: #09090b;">
+  <div class="youfy-ds-banner" style="border-radius: 12px; border: 1px solid var(--vercel-border-color); overflow: hidden; max-width: 1000px; box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.7); background: #09090b;">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="100%" height="auto" style="display: block;">
       <!-- Background & Grid -->
       <rect width="1280" height="640" fill="#09090B"/>
