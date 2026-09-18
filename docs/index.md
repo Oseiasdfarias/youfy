@@ -189,19 +189,11 @@ Experimente abaixo o reprodutor musical integrado com o componente de inferênci
 
   <!-- Controls Bar & Telemetry Indicator -->
   <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1rem; flex-wrap: wrap; gap: 1rem;">
-    <!-- Media Buttons (Larger & with Action Name) -->
-    <div style="display: flex; align-items: center; gap: 0.65rem;">
-      <button class="youfy-ctrl-btn" onclick="prevTrack()" title="Faixa Anterior">
-        <span>⏮</span>
-      </button>
-      <button class="youfy-play-btn-pill" id="btn-player-play" onclick="togglePlaySynth()" title="Reproduzir / Pausar">
-        <span id="player-play-icon" style="font-size: 1.15rem; line-height: 1;">▶</span>
-        <span id="player-play-text" style="letter-spacing: -0.01em;">Reproduzir Áudio</span>
-      </button>
-      <button class="youfy-ctrl-btn" onclick="nextTrack()" title="Próxima Faixa">
-        <span>⏭</span>
-      </button>
-    </div>
+    <!-- Large Prominent Play Button -->
+    <button class="youfy-play-btn-hero" id="btn-player-play" onclick="togglePlaySynth()" title="Reproduzir / Pausar Áudio">
+      <span id="player-play-icon" style="font-size: 1.35rem; line-height: 1; display: inline-flex; align-items: center;">▶</span>
+      <span id="player-play-text" style="letter-spacing: -0.01em; font-size: 1rem;">Reproduzir Áudio</span>
+    </button>
 
     <!-- Telemetry Indicator -->
     <div style="display: flex; align-items: center; gap: 0.5rem; font-family: var(--md-font-code); font-size: 0.75rem; color: #a1a1aa;">
