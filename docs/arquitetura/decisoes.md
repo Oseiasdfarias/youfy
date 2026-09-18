@@ -1,52 +1,115 @@
-# Decisões Estruturais
+# Decisões Estruturais & Fundamentos de Engenharia
 
 Toda decisão de arquitetura no Youfy foi pensada para priorizar o aprendizado prático e a robustez de MLOps, evitando armadilhas comuns em projetos pessoais de IA.
 
 ---
 
-## 1. Fonte de Catálogo Aberta (FMA vs. YouTube)
+## 1. Fonte de Catálogo: Por que o FMA e não o YouTube?
 
 A concepção preliminar de utilizar raspagem ou APIs do YouTube foi descartada após análise rigorosa dos Termos de Serviço e Políticas de Desenvolvedor da plataforma:
 
-- **Restrições de Termos de Serviço:** Proibição explícita de extração e separação de faixas de áudio do componente de vídeo (Seção III.I.7-8).
-- **Proibição de Background Player:** Impossibilidade de execução em segundo plano ou simulação de player de áudio dedicado.
-- **Retenção de Dados:** Limitação de armazenamento de dados da API em até 30 dias (inviabilizando criação de conjuntos de dados longitudinais).
-- **Cotas Severas:** Cota padrão de 10.000 unidades/dia (apenas 100 buscas/dia).
+```mermaid
+flowchart TD
+    subgraph YouTube (Inviável)
+        YT1["Termos de Serviço: Proíbe raspagem automatizada"]
+        YT2["Dev Policy III.I.7-8: Proíbe separar componente de áudio"]
+        YT3["Dev Policy III.I.9: Proíbe player em background"]
+        YT4["Dev Policy III.E.4: Dados não retidos além de 30 dias"]
+        YT5["Cota de API: 10.000 un/dia (100 buscas/dia)"]
+    end
 
-### Solução Adotada
-O Youfy adota o **Free Music Archive (FMA)** como fonte primária:
-- Catálogo livre sob licenças Creative Commons.
-- Benchmark acadêmico consolidado em *Music Information Retrieval* (MIR), viabilizando comparação direta das métricas do modelo com a literatura especializada.
-- Conjunto `fma_small`: 8.000 faixas de 30 segundos, distribuídas equilibradamente em 8 gêneros musicais (~7,2 GB).
+    subgraph FMA (Free Music Archive - Adotado)
+        FMA1["Licenciamento Aberto Creative Commons"]
+        FMA2["Benchmark MIR Acadêmico Consolidado"]
+        FMA3["Conjunto fma_small: 8.000 faixas de 30s (~7.2 GB)"]
+        FMA4["8 gêneros musicais perfeitamente balanceados"]
+        FMA5["Dataset local, 100% offline, sem custos ou rede"]
+    end
+
+    style YouTube fill:#1c1012,stroke:#ef4444,color:#fca5a5
+    style FMA fill:#0f1715,stroke:#22c55e,color:#86efac
+```
+
+### O que o Free Music Archive (FMA) viabiliza:
+- **Reprodução Legal:** Arquivos MP3 armazenados localmente e tocados sem intermediários.
+- **Métricas Comparáveis com a Literatura:** Acurácia e Macro-F1 diretamente comparáveis com papers de MIR (*Music Information Retrieval*).
+- **Fatia Inicial Balanceada:** O `fma_small` possui exatamente 1.000 faixas para cada um dos 8 gêneros (Electronic, Experimental, Folk, Hip-Hop, Instrumental, International, Pop, Rock).
 
 ---
 
-## 2. Sinal de Interação: População Sintética + Holdout Real
+## 2. População Sintética + Holdout Real
 
 Trabalhar com um único usuário humano gera um ciclo de MLOps estatisticamente anêmico:
-- Não há potência estatística para testes A/B.
-- É impossível exercitar algoritmos de recomendação colaborativa ou *multi-armed bandits*.
-- A detecção de drift não tem sinal com volume suficiente.
+- Sem potência estatística para testes A/B.
+- Impossibilidade de exercitar *bandits* ou recomendação colaborativa.
+- Ausência de volume para observar *drift* de distribuição.
 
-### Solução Adotada
-1. **População Sintética (Simulador):** Agentes com distribuições de preferências latentes geram logs de escuta contínuos, possibilitando experimentação estatística em larga escala.
-2. **Holdout Humano Honesto:** Escutas humanas reais são marcadas e mantidas estritamente segregadas no schema (`actor_kind='human'`), garantindo que o simulador nunca seja avaliado contra si mesmo.
+```mermaid
+flowchart LR
+    subgraph População Sintética
+        Sim["Simulador de Usuários"] -->|Sessões de Escuta| Batch["Lotes de Eventos"]
+        Batch -->|actor_kind='simulated'| Events[("Event Store (Postgres)")]
+    end
+
+    subgraph Escuta Humana (Holdout Puro)
+        User["Usuário Humano"] -->|Player TUI| RealEvent["Eventos Reais"]
+        RealEvent -->|actor_kind='human'| Events
+    end
+
+    Events -->|Segregação Estrita| Eval["Avaliação e Benchmark Honestos"]
+
+    classDef simStyle fill:#18181b,stroke:#3b82f6,color:#93c5fd;
+    classDef humanStyle fill:#18181b,stroke:#22c55e,color:#86efac;
+    class Sim,Batch simStyle;
+    class User,RealEvent humanStyle;
+```
+
+> [!IMPORTANT]
+> A escuta humana real permanece como **holdout honesto**, nunca misturada com os dados sintéticos. Isso protege o projeto contra o autoengano de validar o simulador com o próprio simulador.
 
 ---
 
-## 3. Primeiro Modelo: Classificador de Gênero Supervisionado
+## 3. Arquitetura do Primeiro Modelo
 
-Em vez de iniciar por recomendadores complexos ou representações auto-supervisionadas difíceis de calibrar:
-- **CNN 2D leve** sobre mel-espectrogramas.
-- Rótulos supervisionados derivados diretamente da taxonomia do FMA.
-- O objetivo primário é exercitar rapidamente o ciclo completo: treino, tracking de parâmetros no MLflow, registro de modelo, promoção por métrica codificada e serving com validação de contrato.
-- A penúltima camada da rede servirá futuramente como extrator de embeddings acústicos para sistemas de recomendação.
+Em vez de iniciar por representações auto-supervisionadas difíceis de calibrar ou recomendadores com dados esparsos:
+- **Classificador de Gênero Supervisionado:** Rede Convolucional 2D (CNN) sobre mel-espectrogramas.
+- **Rótulos Confiáveis:** Herdados da taxonomia de gêneros do FMA.
+- **Reaproveitamento de Embeddings:** A penúltima camada da rede servirá diretamente como embedding acústico para o recomendador *content-based* futuro (Spec 3).
+
+```mermaid
+flowchart LR
+    Audio["Áudio 30s"] --> Melspec["Mel-espectrograma (128, 1292)"]
+    Melspec --> Conv["Camadas Convolucionais 2D + BatchNorm + ReLU"]
+    Conv --> Pool["Adaptive Max/Avg Pooling"]
+    Pool --> Penult["Penúltima Camada Linear (Embedding 256d)"]
+    Penult --> Head["Classificador Linear (8 Classes)"]
+    Head --> Pred["Probabilidades de Gênero (Softmax)"]
+
+    style Penult fill:#2e1065,stroke:#a855f7,color:#e9d5ff
+    style Pred fill:#431407,stroke:#ff5500,color:#fed7aa
+```
 
 ---
 
 ## 4. Fatia Vertical Fina vs. Fundação Horizontal
 
-Evitou-se a armadilha do "encanamento infinito" (meses criando infraestrutura sem treinar nada) e do "repositório de notebooks" (treino desconectado de engenharia de software):
-- Cada camada funcional é implementada com espessura fina (TUI minimalista, API direta, banco local).
-- **Exceção de alto investimento:** A espinha dorsal de dados, versionamento (DVC), tracking (MLflow), isolamento de features e testes de invariantes nasce com rigor absoluto desde o primeiro dia.
+```mermaid
+flowchart TD
+    subgraph Armadilha: Fundação Horizontal
+        FH1["Meses em infraestrutura e mensageria"] -.-> FH2["Nenhum modelo treinado"] -.-> FH3["Abandono do projeto"]
+    end
 
+    subgraph Armadilha: Modelo Primeiro
+        MP1["Centenas de Jupyter Notebooks soltos"] -.-> MP2["Código sem contratos nem testes"] -.-> MP3["Impossível de servir ou monitorar"]
+    end
+
+    subgraph Abordagem Youfy: Fatia Vertical Fina com Espinha MLOps
+        Y1["Infra magra: Postgres local + TUI Textual"]
+        Y2["Espinha de MLOps rigorosa: DVC + MLflow + Testes de Invariantes"]
+        Y3["Ciclo de ponta a ponta comprovado no primeiro mês"]
+    end
+
+    style Armadilha: Fundação Horizontal fill:#18181b,stroke:#52525b,color:#a1a1aa
+    style Armadilha: Modelo Primeiro fill:#18181b,stroke:#52525b,color:#a1a1aa
+    style Abordagem Youfy: Fatia Vertical Fina com Espinha MLOps fill:#09090b,stroke:#22c55e,color:#f4f4f5
+```

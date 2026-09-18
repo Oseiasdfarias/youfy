@@ -49,3 +49,66 @@ uv run alembic upgrade head
 uv run alembic check
 ```
 
+---
+
+## Diagrama Entidade-Relacionamento (ERD)
+
+Abaixo está a arquitetura relacional do banco PostgreSQL, destacando as chaves estrangeiras, a quarentena de falhas e os artefatos de features indexados por fingerprint:
+
+```mermaid
+erDiagram
+    artists ||--o{ tracks : "1:N (possui faixas)"
+    genres ||--o{ genres : "0..1:N (parent_id hierárquico)"
+    genres ||--o{ tracks : "1:N (top_genre)"
+    tracks ||--o{ track_genres : "1:N"
+    genres ||--o{ track_genres : "1:N"
+    tracks ||--o{ features : "1:N (features extraídas)"
+    tracks ||--o{ ingest_failures : "0..1:N (quarentena)"
+
+    artists {
+        int id PK
+        string name
+        string source "fma | synthetic"
+        timestamp created_at
+    }
+
+    genres {
+        int id PK
+        string title
+        int parent_id FK "nullable"
+        int top_level
+    }
+
+    tracks {
+        int id PK
+        int artist_id FK
+        string title
+        int duration_ms
+        string audio_path
+        string top_genre
+        string source
+        timestamp created_at
+    }
+
+    track_genres {
+        int track_id PK,FK
+        int genre_id PK,FK
+    }
+
+    features {
+        uuid id PK
+        int track_id FK
+        string spec_fingerprint "SHA-256 (16 chars)"
+        string file_path "caminho do .npy"
+        jsonb metadata
+        timestamp created_at
+    }
+
+    ingest_failures {
+        int id PK
+        string source_ref "ex: FMA track_id"
+        string reason "unreadable_audio | missing_file"
+        text detail
+        timestamp created_at
+    }
+```

@@ -46,3 +46,47 @@ youfy pipeline split --seed 42
 - **Estratificação por gênero:** Mantém o equilíbrio entre classes em todos os splits.
 - Salva o resultado em `data/splits/<fingerprint>/`.
 
+---
+
+## Ciclo de Vida Completo do Dado Offline
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Dev as Engenheiro MLOps / CI
+    participant CLI as youfy pipeline
+    participant DB as Postgres (Catalog)
+    participant Disk as Armazenamento Local
+    participant DVC as DVC Remote
+
+    Note over Dev,CLI: 1. Ingestão e Gate de Quarentena
+    Dev->>CLI: youfy pipeline ingest --dump-dir ./data/raw/fma
+    CLI->>Disk: probe() em cada MP3
+    CLI->>DB: upsert_artist(), upsert_track()
+    alt Falha de leitura / áudio quebrado
+        CLI->>DB: record_failure() (tabela ingest_failures)
+    end
+    CLI-->>Dev: ingest.concluido (taxa_falhas < 2%)
+
+    Note over Dev,CLI: 2. Extração Determinística de Features
+    Dev->>CLI: youfy pipeline featurize --n-mels 128
+    CLI->>DB: listar faixas ativas
+    loop Para cada faixa pendente
+        CLI->>Disk: decode() + compute_melspec()
+        CLI->>Disk: salvar {id}.npy em data/features/{fingerprint}/
+        CLI->>DB: registrar feature e fingerprint
+    end
+    CLI-->>Dev: featurize.concluido
+
+    Note over Dev,CLI: 3. Particionamento Estratificado
+    Dev->>CLI: youfy pipeline split --seed 42
+    CLI->>DB: carregar catálogo completo
+    CLI->>CLI: make_splits() (algoritmo guloso por artista)
+    CLI->>Disk: salvar train/val/test (.parquet / .json)
+    CLI-->>Dev: split.concluido (interseção = ∅)
+
+    Note over Dev,DVC: 4. Versionamento de Artefatos
+    Dev->>DVC: make dvc-push
+    DVC-->>Dev: features e splits sincronizados
+```
+

@@ -36,3 +36,32 @@ Planejados para as próximas fases do ciclo de treino:
 - **Overfitting Proposital:** Capacidade de atingir 100% de acurácia em um mini-batch de 50 amostras (separa bugs de código de problemas de arquitetura do modelo).
 - **Rótulos Embaralhados:** Treino com rótulos aleatórios deve produzir acurácia próxima ao acaso ($\sim 12{,}5\%$ para 8 classes).
 
+---
+
+## Pirâmide de Testes e Confiabilidade MLOps
+
+A pirâmide de qualidade do Youfy é projetada para capturar erros nas camadas mais rápidas e baratas antes da execução completa:
+
+```mermaid
+flowchart TD
+    subgraph Pyramid["Pirâmide de Confiabilidade & Testes Youfy"]
+        L4["Nível 4: Propriedades de ML & Reprodutibilidade<br/>(Macro-F1 estável, Sanity check de mini-overfitting)"]
+        L3["Nível 3: Integração & E2E (make e2e)<br/>(Cadeia completa com dados sintéticos e quarentena)"]
+        L2["Nível 2: Testes Baseados em Propriedades (Hypothesis)<br/>(Varredura de topologias extremas e disjunção de artistas)"]
+        L1["Nível 1: Testes Unitários Determinísticos (make test)<br/>(DSP analítico, SQLAlchemy puro, sem I/O externo)"]
+    end
+
+    L4 --> L3
+    L3 --> L2
+    L2 --> L1
+
+    classDef l1 fill:#18181b,stroke:#10b981,stroke-width:1.5px,color:#34d399;
+    classDef l2 fill:#18181b,stroke:#3b82f6,stroke-width:1.5px,color:#60a5fa;
+    classDef l3 fill:#18181b,stroke:#a855f7,stroke-width:1.5px,color:#c084fc;
+    classDef l4 fill:#18181b,stroke:#f59e0b,stroke-width:1.5px,color:#fbbf24;
+    class L1 l1;
+    class L2 l2;
+    class L3 l3;
+    class L4 l4;
+```
+

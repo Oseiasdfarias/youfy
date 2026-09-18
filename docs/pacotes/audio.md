@@ -43,3 +43,52 @@ Decodificação de áudio para matrizes NumPy e inspeção leve:
 ### 4. `youfy_audio.errors`
 - `UnreadableAudio`: Exceção tipada lançada quando um arquivo está ausente, corrompido, truncado ou em formato não decodificável.
 
+---
+
+## Fluxo do Pipeline Acústico (DSP)
+
+O diagrama abaixo ilustra o ciclo de vida da transformação desde o arquivo de áudio bruto no disco até a matriz tensorial pronta para o classificador:
+
+```mermaid
+flowchart TD
+    subgraph RawAudio["1. Áudio Bruto em Disco"]
+        File["Arquivo de Áudio (.mp3 / .wav / .flac)"]
+    end
+
+    subgraph Inspecao["2. Inspeção Rápida (Probe)"]
+        Probe["soundfile.info()"]
+        Meta["AudioProbe<br/>- duration_sec<br/>- sample_rate<br/>- channels"]
+    end
+
+    subgraph Decodificacao["3. Decodificação & Normalização"]
+        Decode["soundfile.read()"]
+        Mono["Conversão Estéreo → Mono (mean)"]
+        Resample["Reamostragem (librosa.resample)"]
+        Signal["Sinal PCM float32 [-1.0, +1.0]<br/>Taxa fixa: target_sample_rate"]
+    end
+
+    subgraph DSP["4. Extração de Features (Mel-Spectrogram)"]
+        STFT["Short-Time Fourier Transform (STFT)<br/>n_fft = 2048, hop_length = 512"]
+        Power["Magnitude ao Quadrado |STFT|²"]
+        MelFilter["Banco de Filtros Mel (librosa.filters.mel)<br/>n_mels = 128, fmin=20Hz, fmax=Nyquist"]
+        LogPower["Escala Logarítmica dB (ref=1.0)"]
+        CropPad["Truncamento ou Zero-Padding Padronizado"]
+    end
+
+    subgraph Output["5. Tensor de Entrada para PyTorch / CNN"]
+        Tensor["Tensor 2D NumPy float32<br/>Formato: (128 mel-bins, 1292 frames)<br/>Loudness absoluto preservado"]
+    end
+
+    File --> Probe --> Meta
+    File --> Decode --> Mono --> Resample --> Signal
+    Signal --> STFT --> Power --> MelFilter --> LogPower --> CropPad --> Tensor
+
+    classDef raw fill:#161618,stroke:#3b82f6,stroke-width:1.5px,color:#f4f4f5;
+    classDef proc fill:#18181b,stroke:#a855f7,stroke-width:1.5px,color:#f4f4f5;
+    classDef dsp fill:#18181b,stroke:#10b981,stroke-width:1.5px,color:#f4f4f5;
+    classDef out fill:#09090b,stroke:#06b6d4,stroke-width:2px,color:#38bdf8;
+    class File raw;
+    class Probe,Meta,Decode,Mono,Resample,Signal proc;
+    class STFT,Power,MelFilter,LogPower,CropPad dsp;
+    class Tensor out;
+```

@@ -44,3 +44,39 @@ Exemplo de log emitido:
 }
 ```
 
+---
+
+## Fluxo de Orquestração dos Pipelines Offline
+
+O pacote `youfy-pipelines` coordena os 3 estágios determinísticos, conectando o catálogo relacional ao armazenamento de matrizes e partições de ML:
+
+```mermaid
+flowchart LR
+    subgraph S1["1. Estágio: ingest"]
+        FMA["Dump FMA (CSV + MP3s)"] --> CLI1["youfy pipeline ingest"]
+        CLI1 --> Repo["youfy_catalog.repository"]
+        Repo --> DB[("PostgreSQL: tracks / artists / genres")]
+        Repo -. falhas .-> Quarantine[("ingest_failures")]
+    end
+
+    subgraph S2["2. Estágio: featurize"]
+        DB --> CLI2["youfy pipeline featurize"]
+        CLI2 --> Spec["FeatureSpec (fingerprint SHA-256)"]
+        Spec --> AudioDSP["youfy_audio (decode + melspec)"]
+        AudioDSP --> NpyStore[("Disco: data/features/{fingerprint}/{id}.npy")]
+        AudioDSP --> DBFeat[("PostgreSQL: features")]
+    end
+
+    subgraph S3["3. Estágio: split"]
+        DBFeat --> CLI3["youfy pipeline split"]
+        CLI3 --> Greedy["Algoritmo Guloso por Artista<br/>(seed determinística)"]
+        Greedy --> Parquet[("Partições Parquet:<br/>train.parquet (80%)<br/>val.parquet (10%)<br/>test.parquet (10%)")]
+    end
+
+    classDef stage fill:#18181b,stroke:#3b82f6,stroke-width:1.5px,color:#f4f4f5;
+    classDef storage fill:#09090b,stroke:#10b981,stroke-width:1.5px,color:#34d399;
+    classDef cli fill:#27272a,stroke:#a855f7,stroke-width:1.5px,color:#e4e4e7;
+    class S1,S2,S3 stage;
+    class DB,Quarantine,NpyStore,DBFeat,Parquet storage;
+    class CLI1,CLI2,CLI3 cli;
+```

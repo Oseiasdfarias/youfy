@@ -25,11 +25,65 @@ $$\text{artistas}(\text{train}) \cap \text{artistas}(\text{val}) = \emptyset$$
 $$\text{artistas}(\text{train}) \cap \text{artistas}(\text{test}) = \emptyset$$
 $$\text{artistas}(\text{val}) \cap \text{artistas}(\text{test}) = \emptyset$$
 
+```mermaid
+flowchart TD
+    subgraph Catalog["Acervo Completo de Artistas (N Artistas Únicos)"]
+        Art[Artistas {A1, A2, A3, ... An}]
+    end
+
+    subgraph Splits["Partições 100% Estritas e Disjuntas"]
+        Train["Conjunto de Treino (Train ~80%)<br/>Artistas: {A1, A4, A7, ...}"]
+        Val["Conjunto de Validação (Val ~10%)<br/>Artistas: {A2, A5, ...}"]
+        Test["Conjunto de Teste (Test ~10%)<br/>Artistas: {A3, A6, ...}"]
+    end
+
+    Art -->|"Atribuição atômica por artista"| Train
+    Art -->|"Zero interseção"| Val
+    Art -->|"Zero vazamento"| Test
+
+    Train <-.->|Interseção = ∅| Val
+    Val <-.->|Interseção = ∅| Test
+    Train <-.->|Interseção = ∅| Test
+
+    classDef catalog fill:#18181b,stroke:#a855f7,stroke-width:1.5px,color:#f4f4f5;
+    classDef train fill:#18181b,stroke:#3b82f6,stroke-width:1.5px,color:#60a5fa;
+    classDef val fill:#18181b,stroke:#10b981,stroke-width:1.5px,color:#34d399;
+    classDef test fill:#18181b,stroke:#f59e0b,stroke-width:1.5px,color:#fbbf24;
+    class Catalog,Art catalog;
+    class Train train;
+    class Val val;
+    class Test test;
+```
+
 ---
 
 ## Implementação: Algoritmo Guloso por Déficit
 
 A função `make_splits` no módulo `youfy_pipelines.split` opera da seguinte forma:
+
+```mermaid
+flowchart TD
+    Start["Início: make_splits(tracks, seed, ratios)"] --> Group["1. Agrupar faixas por (gênero, artista)"]
+    Group --> Quotas["2. Calcular cotas ideais de faixas por gênero e split"]
+    Quotas --> LoopGenre{"Para cada gênero"}
+    LoopGenre --> SortArtists["Ordenar artistas por contagem decrescente (com shuffle por seed)"]
+    SortArtists --> LoopArtist{"Para cada artista"}
+    LoopArtist --> CalcDeficit["Calcular déficit atual de faixas em Train, Val e Test"]
+    CalcDeficit --> Assign["Atribuir TODAS as faixas do artista ao split com maior déficit"]
+    Assign --> CheckArtist{"Mais artistas no gênero?"}
+    CheckArtist -- Sim --> LoopArtist
+    CheckArtist -- Não --> CheckGenre{"Mais gêneros?"}
+    CheckGenre -- Sim --> LoopGenre
+    CheckGenre -- Não --> AssertCheck["Verificar Invariante Matemático (assert sets disjuntos)"]
+    AssertCheck --> Export["Exportar train.parquet, val.parquet, test.parquet"]
+
+    classDef proc fill:#18181b,stroke:#3b82f6,stroke-width:1.5px,color:#f4f4f5;
+    classDef cond fill:#27272a,stroke:#a855f7,stroke-width:1.5px,color:#f4f4f5;
+    classDef out fill:#09090b,stroke:#10b981,stroke-width:2px,color:#34d399;
+    class Start,Group,Quotas,SortArtists,CalcDeficit,Assign,AssertCheck proc;
+    class LoopGenre,LoopArtist,CheckArtist,CheckGenre cond;
+    class Export out;
+```
 
 1. Agrupa as faixas por par `(gênero, artista)`.
 2. Calcula as cotas ideais de faixas para cada conjunto (`train: 70%`, `val: 15%`, `test: 15%`).

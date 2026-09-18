@@ -8,6 +8,30 @@ Os contratos do Youfy são estruturas de dados e assinaturas desenhadas para res
 
 A configuração de featurização viaja incorporada ao artefato do modelo treinado. O servidor de predição (`serving`) valida o `FeatureSpec` do modelo contra o featurizer em tempo de execução:
 
+```mermaid
+flowchart TD
+    FS["FeatureSpec
+    sr: 22050 | n_mels: 128 | hop: 512 | n_frames: 1292"] --> Hash["SHA-256 (Primeiros 16 hexadecimais)"]
+    Hash --> FP["spec_fingerprint (ex: b8a7c14e9f02d51b)"]
+    
+    FP --> DirF["data/features/melspec/b8a7c14e9f02d51b/
+    ├── _manifest.json
+    ├── fma_track_2.npy
+    └── fma_track_3.npy"]
+    
+    FP --> DirS["data/splits/b8a7c14e9f02d51b/
+    ├── train.json
+    ├── val.json
+    └── test.json"]
+
+    style FP fill:#431407,stroke:#ff5500,color:#fed7aa
+    style DirF fill:#18181b,stroke:#27272a,color:#ededed
+    style DirS fill:#18181b,stroke:#27272a,color:#ededed
+```
+
+### Por que Invalidação por Diretório?
+Se a taxa de amostragem (`sample_rate`), a quantidade de filtros mel (`n_mels`) ou o `hop_length` mudarem, **nenhum arquivo anterior é deletado ou corrompido**: um novo diretório é criado paralelamente, mantendo o histórico de dados 100% íntegro e permitindo que versões antigas de modelos continuem sendo servidas sem risco de colisão.
+
 ```python
 @dataclass(frozen=True, slots=True)
 class FeatureSpec:
@@ -29,21 +53,41 @@ class FeatureSpec:
         return hashlib.sha256(payload).hexdigest()[:16]
 ```
 
-### Invalidação Segura por Fingerprint
-A chave SHA-256 de 16 caracteres hexadecimais gerada por `.fingerprint()` define o subdiretório de armazenamento das features:
+---
 
-```
-data/features/melspec/<fingerprint>/
-data/splits/<fingerprint>/
-```
+## 2. Ciclo de Telemetria e Buffer Offline de Eventos
 
-Se a taxa de amostragem (`sample_rate`), a quantidade de filtros mel (`n_mels`) ou o `hop_length` mudarem, **nenhum arquivo anterior é deletado ou corrompido**: um novo diretório é criado paralelamente, mantendo o histórico de dados 100% íntegro.
+O player pode operar desconectado da rede. Se a API estiver fora do ar, o reprodutor bufferiza os eventos localmente e sincroniza quando a conexão é restabelecida:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Usuário / Simulador
+    participant Player as Youfy Player
+    participant Buffer as Buffer Local (SQLite)
+    participant API as FastAPI Server
+    participant DB as Postgres (Event Store)
+
+    User->>Player: Inicia reprodução (play_start)
+    Player->>Buffer: Grava evento com event_id (UUID) e ts (relógio do cliente)
+    
+    rect rgb(20, 20, 24)
+        Note over Player,API: Se API estiver fora, reprodução segue sem interrupção
+        Player--xAPI: POST /events (Falha de conexão)
+        Player->>Buffer: Mantém evento no buffer local
+    end
+
+    Note over Player,API: API volta a responder
+    Player->>API: POST /events (Lote pendente)
+    API->>DB: INSERT INTO events ... ON CONFLICT (event_id) DO NOTHING
+    DB-->>API: 200 OK (Eventos gravados sem duplicatas)
+    API-->>Player: 200 OK
+    Player->>Buffer: Limpa eventos sincronizados
+```
 
 ---
 
-## 2. Schema de Eventos de Interação
-
-Tabela append-only para registro de telemetria musical emitida tanto pelo player local quanto por sessões simuladas:
+## 3. Schema SQL da Tabela de Eventos
 
 ```sql
 CREATE TABLE events (
@@ -62,22 +106,18 @@ CREATE TABLE events (
 );
 ```
 
-### Princípios do Schema
-1. **`actor_id` + `actor_kind`:** Permite que populações simuladas e escutas humanas compartilhem o mesmo pipeline de eventos sem contaminação do holdout de validação.
-2. **Separação de `ts` (cliente) e `ingested_at` (servidor):** Essencial para suportar buffering e reprodução offline sem distorcer janelas temporais de análise de churn ou retenção.
-3. **`context.model_version`:** Toda predição ou recomendação registra qual versão do modelo motivou a reprodução, viabilizando avaliação *off-policy* e correção de viés de exposição.
-4. **Sem interpretação prévia:** Não há campo booleano `liked`. Eventos guardam o fato atômico (`skip` aos 3s vs. `skip` aos 28s); interpretações analíticas são derivadas em tempo de consulta.
-
 ---
 
-## 3. Superfície da API HTTP
+## 4. Superfície da API HTTP
 
-| Método | Rota | Descrição |
-|---|---|---|
-| `GET` | `/tracks?q=&genre=&limit=` | Busca e listagem no acervo |
-| `GET` | `/tracks/{id}` | Metadados da faixa e gênero |
-| `GET` | `/tracks/{id}/stream` | Streaming de áudio (suporte a HTTP Range Requests) |
-| `POST` | `/events` | Ingestão em lote idempotente (`ON CONFLICT DO NOTHING`) |
-| `GET` | `/tracks/{id}/genre` | Predição com `model_version` ativa (503 se sem modelo promovido) |
-| `GET` | `/health` | Status dos serviços e versão de modelo em `Production` |
+| Método | Rota | Resposta de Sucesso | Modo Degradado / Falha |
+|---|---|---|---|
+| `GET` | `/tracks?q=&genre=&limit=` | `200 OK` (lista de faixas paginada) | `400 Bad Request` |
+| `GET` | `/tracks/{id}` | `200 OK` (metadados e gênero predito) | `404 Not Found` |
+| `GET` | `/tracks/{id}/stream` | `206 Partial Content` / `200 OK` | `404 Not Found` |
+| `POST` | `/events` | `200 OK` (idempotente por `event_id`) | `422 Unprocessable` |
+| `GET` | `/tracks/{id}/genre` | `200 OK` (`distribuição`, `model_version`) | **`503 Service Unavailable`** (sem modelo) |
+| `GET` | `/health` | `200 OK` (`status: healthy`, `model_loaded`) | `503 Service Unavailable` |
 
+> [!WARNING]
+> A rota `/tracks/{id}/genre` retorna **503 explícito** quando não há modelo em `Production`. Nunca há predição chutada ou fallback silencioso, impedindo contaminação de dados derivados.
