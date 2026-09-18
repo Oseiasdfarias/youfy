@@ -1,4 +1,4 @@
-.PHONY: setup up down lint test ingest featurize split e2e dvc-push
+.PHONY: setup up down lint test ingest featurize split e2e dvc-push docs-build docs-serve
 
 setup:
 	uv sync --all-extras
@@ -29,4 +29,10 @@ e2e:
 
 dvc-push:
 	uv run dvc add data/features data/splits && uv run dvc push
+
+docs-build:
+	uv run mkdocs build --strict
+
+docs-serve:
+	uv run mkdocs serve
 

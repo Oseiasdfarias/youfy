@@ -1,0 +1,81 @@
+site_name: Youfy
+site_description: Laboratório de IA e MLOps em formato de player musical
+site_author: osfarias
+repo_name: osfarias/youfy
+repo_url: https://github.com/osfarias/youfy
+
+theme:
+  name: material
+  language: pt-BR
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white
+      accent: black
+      toggle:
+        icon: material/weather-night
+        name: Alternar para modo escuro
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: white
+      toggle:
+        icon: material/weather-sunny
+        name: Alternar para modo claro
+
+extra_css:
+  - stylesheets/vercel.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Visão Geral: index.md
+  - Arquitetura:
+      - Decisões Estruturais: arquitetura/decisoes.md
+      - Contratos Duradouros: arquitetura/contratos.md
+  - Pacotes:
+      - youfy-audio: pacotes/audio.md
+      - youfy-catalog: pacotes/catalog.md
+      - youfy-pipelines: pacotes/pipelines.md
+  - Guia Prático:
+      - Início Rápido: guia/inicio-rapido.md
+      - Pipelines Offline: guia/pipelines-offline.md
+  - MLOps & Testes:
+      - Invariantes de ML: mlops-e-testes/invariantes.md
+      - Versionamento DVC: mlops-e-testes/versionamento-dvc.md
+      - Estratégia de Testes: mlops-e-testes/estrategia-testes.md
+  - Especificações:
+      - Loop Fechado Mínimo: superpowers/specs/2026-09-18-youfy-loop-fechado-minimo-design.md
+      - Plano 1A - Fundação de Dados: superpowers/plans/2026-09-18-youfy-1a-fundacao-de-dados.md

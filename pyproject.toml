@@ -34,3 +34,8 @@ dev-mode-dirs = ["."]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "mkdocs-material>=9.7.7",
+]
