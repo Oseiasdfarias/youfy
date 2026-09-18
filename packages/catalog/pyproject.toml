@@ -1,0 +1,15 @@
+[project]
+name = "youfy-catalog"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+  "sqlalchemy>=2.0.30",
+  "psycopg[binary]>=3.1",
+  "alembic>=1.13",
+  "pandas>=2.2",
+  "pydantic-settings>=2.3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

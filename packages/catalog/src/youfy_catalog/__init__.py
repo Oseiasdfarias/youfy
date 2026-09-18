@@ -1,0 +1,1 @@
+"""youfy_catalog package."""

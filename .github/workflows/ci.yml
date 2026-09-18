@@ -1,0 +1,26 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: youfy
+          POSTGRES_PASSWORD: youfy
+          POSTGRES_DB: youfy
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U youfy" --health-interval 3s --health-retries 10
+    env:
+      YOUFY_DATABASE_URL: postgresql+psycopg://youfy:youfy@localhost:5433/youfy
+      YOUFY_DATA_DIR: ./data
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: sudo apt-get update && sudo apt-get install -y libsndfile1 ffmpeg
+      - run: uv sync --all-extras
+      - run: uv run ruff check .
+      - run: uv run pytest -v

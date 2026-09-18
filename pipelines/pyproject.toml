@@ -1,0 +1,16 @@
+[project]
+name = "youfy-pipelines"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["youfy-audio", "youfy-catalog", "typer>=0.12", "structlog>=24.1"]
+
+[project.scripts]
+youfy = "youfy_pipelines.cli:app"
+
+[tool.uv.sources]
+youfy-audio = { workspace = true }
+youfy-catalog = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
