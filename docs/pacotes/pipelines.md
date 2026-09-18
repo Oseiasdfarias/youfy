@@ -43,3 +43,4 @@ Exemplo de log emitido:
   "taxa_de_falha": 0.0008
 }
 ```
+

@@ -38,3 +38,4 @@ uv run dvc push
 ```
 
 Quando novos dados são processados, apenas os arquivos ponteiro `*.dvc` correspondentes são comitados no Git, garantindo que qualquer commit do código possa restaurar exatamente o estado correspondente das matrizes de features.
+

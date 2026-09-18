@@ -48,3 +48,4 @@ uv run alembic upgrade head
 # Verifica se o modelo SQLAlchemy está 100% alinhado com o banco
 uv run alembic check
 ```
+

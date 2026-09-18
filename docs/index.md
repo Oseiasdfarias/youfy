@@ -59,3 +59,4 @@ make e2e
 ```
 
 Acesse o [Guia de Início Rápido](guia/inicio-rapido.md) para detalhes completos de configuração.
+

@@ -80,3 +80,4 @@ CREATE TABLE events (
 | `POST` | `/events` | Ingestão em lote idempotente (`ON CONFLICT DO NOTHING`) |
 | `GET` | `/tracks/{id}/genre` | Predição com `model_version` ativa (503 se sem modelo promovido) |
 | `GET` | `/health` | Status dos serviços e versão de modelo em `Production` |
+

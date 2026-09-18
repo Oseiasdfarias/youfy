@@ -45,3 +45,4 @@ A função `make_splits` no módulo `youfy_pipelines.split` opera da seguinte fo
 Além dos testes unitários convencionais, o Youfy executa testes de propriedades via **Hypothesis** (`test_propriedade_disjuncao_de_artista_vale_para_qualquer_acervo`):
 - Gera dezenas de catálogos sintéticos com topologias extremas (artistas com muitas faixas, artistas com uma única faixa, distribuições desbalanceadas de gêneros).
 - Valida que o invariante de disjunção se mantém rigorosamente verdadeiro para qualquer acervo arbitrário.
+

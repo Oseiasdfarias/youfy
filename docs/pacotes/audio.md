@@ -42,3 +42,4 @@ Decodificação de áudio para matrizes NumPy e inspeção leve:
 
 ### 4. `youfy_audio.errors`
 - `UnreadableAudio`: Exceção tipada lançada quando um arquivo está ausente, corrompido, truncado ou em formato não decodificável.
+

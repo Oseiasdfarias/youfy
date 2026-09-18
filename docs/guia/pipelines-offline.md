@@ -45,3 +45,4 @@ youfy pipeline split --seed 42
 - **Disjunção estrita de artistas:** Nenhum artista tem faixas divididas entre conjuntos distintos.
 - **Estratificação por gênero:** Mantém o equilíbrio entre classes em todos os splits.
 - Salva o resultado em `data/splits/<fingerprint>/`.
+

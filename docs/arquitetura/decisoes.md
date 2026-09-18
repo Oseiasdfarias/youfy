@@ -49,3 +49,4 @@ Em vez de iniciar por recomendadores complexos ou representações auto-supervis
 Evitou-se a armadilha do "encanamento infinito" (meses criando infraestrutura sem treinar nada) e do "repositório de notebooks" (treino desconectado de engenharia de software):
 - Cada camada funcional é implementada com espessura fina (TUI minimalista, API direta, banco local).
 - **Exceção de alto investimento:** A espinha dorsal de dados, versionamento (DVC), tracking (MLflow), isolamento de features e testes de invariantes nasce com rigor absoluto desde o primeiro dia.
+

@@ -35,3 +35,4 @@ Planejados para as próximas fases do ciclo de treino:
 - **Teste de Reprodutibilidade:** Mesma seed + mesma versão de dados $\rightarrow$ mesmo Macro-F1 dentro de $\pm 0{,}002$.
 - **Overfitting Proposital:** Capacidade de atingir 100% de acurácia em um mini-batch de 50 amostras (separa bugs de código de problemas de arquitetura do modelo).
 - **Rótulos Embaralhados:** Treino com rótulos aleatórios deve produzir acurácia próxima ao acaso ($\sim 12{,}5\%$ para 8 classes).
+
