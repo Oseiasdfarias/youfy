@@ -242,3 +242,133 @@ body {
   margin: 1.5rem 0;
 }
 
+/* -------------------------------------------------------------
+ * ANIMATED HERO BANNER (JS & CSS CANVAS)
+ * ------------------------------------------------------------- */
+.youfy-hero-banner {
+  position: relative;
+  width: 100%;
+  min-height: 280px;
+  background: #09090b;
+  border: 1px solid var(--vercel-border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2rem;
+}
+
+.youfy-hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.youfy-hero-glow {
+  position: absolute;
+  right: -10%;
+  top: -20%;
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(255, 85, 0, 0.12) 0%, rgba(255, 255, 255, 0.03) 50%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+.youfy-hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.youfy-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  background: rgba(24, 24, 27, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: var(--md-font-code);
+  font-size: 0.72rem;
+  color: #a1a1aa;
+}
+
+.youfy-hero-badge .status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.youfy-hero-logo-box {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  background: #121215;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.youfy-hero-brand {
+  font-family: 'Space Grotesk', var(--md-font-family);
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.youfy-hero-sub {
+  font-family: var(--md-font-code);
+  font-size: 0.85rem;
+  color: #a1a1aa;
+  margin-top: 0.35rem;
+  letter-spacing: -0.01em;
+}
+
+.youfy-hero-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 32px;
+}
+
+.youfy-hero-bar {
+  width: 3px;
+  background: #ffffff;
+  border-radius: 2px;
+  transition: height 0.08s ease;
+}
+
+.youfy-hero-bar:nth-child(even) {
+  background: #a1a1aa;
+}
+
+.youfy-hero-bar.accent {
+  background: #ff5500;
+  box-shadow: 0 0 8px rgba(255, 85, 0, 0.6);
+}
+

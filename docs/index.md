@@ -1,14 +1,143 @@
-<div align="center" style="margin-bottom: 2rem;">
+<!-- ANIMATED INTERACTIVE HERO BANNER -->
+<div class="youfy-hero-banner">
+  <!-- Subtle Grid & Ambient Glow -->
+  <div class="youfy-hero-grid"></div>
+  <div class="youfy-hero-glow"></div>
+  
+  <!-- Waveform Animation Canvas -->
+  <canvas id="youfy-hero-canvas" class="youfy-hero-canvas"></canvas>
 
-<img src="assets/banner.svg" alt="Youfy Official Banner" width="100%" style="border-radius: 12px; border: 1px solid var(--vercel-border-color);" />
+  <!-- Top Metadata Bar -->
+  <div style="position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+    <div class="youfy-hero-badge">
+      <span class="status-dot"></span>
+      <span style="color: #ffffff; font-weight: 600;">YOUFY // MLOps Platform</span>
+      <span style="color: #52525b;">•</span>
+      <span>Dataset: fma_small</span>
+    </div>
+    <div style="display: flex; gap: 0.4rem; font-family: var(--md-font-code); font-size: 0.72rem;">
+      <span style="padding: 0.2rem 0.55rem; border-radius: 4px; background: rgba(255, 85, 0, 0.15); border: 1px solid rgba(255, 85, 0, 0.3); color: #ff7733; font-weight: 600;">SPEC-1 CLOSED-LOOP</span>
+      <span style="padding: 0.2rem 0.55rem; border-radius: 4px; background: rgba(39, 39, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); color: #d4d4d8;">SHA-256 FINGERPRINT</span>
+    </div>
+  </div>
 
-<div style="margin-top: 1.25rem; display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap;">
-  <span style="font-family: var(--md-font-code); font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 9999px; background: var(--vercel-card-bg); border: 1px solid var(--vercel-border-color); color: var(--md-default-fg-color);">Dataset: Free Music Archive (fma_small)</span>
-  <span style="font-family: var(--md-font-code); font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 9999px; background: var(--vercel-card-bg); border: 1px solid var(--vercel-border-color); color: #22c55e;">Status: CI &amp; E2E Verified</span>
-  <span style="font-family: var(--md-font-code); font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 9999px; background: var(--vercel-card-bg); border: 1px solid var(--vercel-border-color); color: #ff5500;">Closed-Loop MLOps</span>
+  <!-- Main Identity (Monolith Wave Concept) -->
+  <div style="position: relative; z-index: 2; margin: 1.5rem 0 1rem 0; display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
+    <div class="youfy-hero-logo-box">
+      <svg width="34" height="34" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 11L18 20V29H22V20L28 11H23.5L20 16.8L16.5 11H12Z" fill="white"/>
+        <circle cx="20" cy="33" r="1.8" fill="#FF5500"/>
+      </svg>
+    </div>
+    <div>
+      <div class="youfy-hero-brand">
+        youfy<span style="color: #ff5500;">.</span>
+      </div>
+      <div class="youfy-hero-sub">
+        Closed-Loop Music Intelligence &amp; Acoustic DSP Architecture
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Interactive Bar & Equalizer -->
+  <div style="position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.85rem;">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <div class="youfy-hero-bars" id="hero-bars">
+        <div class="youfy-hero-bar" style="height: 35%;"></div>
+        <div class="youfy-hero-bar" style="height: 60%;"></div>
+        <div class="youfy-hero-bar" style="height: 85%;"></div>
+        <div class="youfy-hero-bar" style="height: 45%;"></div>
+        <div class="youfy-hero-bar accent" style="height: 95%;"></div>
+        <div class="youfy-hero-bar" style="height: 70%;"></div>
+        <div class="youfy-hero-bar" style="height: 40%;"></div>
+        <div class="youfy-hero-bar" style="height: 80%;"></div>
+        <div class="youfy-hero-bar" style="height: 55%;"></div>
+        <div class="youfy-hero-bar" style="height: 90%;"></div>
+        <div class="youfy-hero-bar" style="height: 30%;"></div>
+        <div class="youfy-hero-bar" style="height: 75%;"></div>
+      </div>
+      <span style="font-family: var(--md-font-code); font-size: 0.72rem; color: #71717a;">128-mel spectrogram buffer</span>
+    </div>
+
+    <div style="font-family: var(--md-font-code); font-size: 0.72rem; color: #a1a1aa; display: flex; gap: 1rem;">
+      <span>pytorch</span>
+      <span style="color: #52525b;">•</span>
+      <span>dvc</span>
+      <span style="color: #52525b;">•</span>
+      <span>mlflow</span>
+      <span style="color: #52525b;">•</span>
+      <span>postgres</span>
+    </div>
+  </div>
 </div>
 
-</div>
+<script>
+(function() {
+  // Animated Hero Waveform Canvas
+  const canvas = document.getElementById('youfy-hero-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let animationId;
+  let phase = 0;
+
+  function resizeCanvas() {
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.parentElement.clientHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function drawHeroWaves() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const w = canvas.width;
+    const h = canvas.height;
+    const midY = h * 0.68;
+
+    // Draw secondary subtle wave (ambient noise)
+    ctx.beginPath();
+    ctx.lineWidth = 1.2;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    for (let x = 0; x < w; x += 3) {
+      const y = midY + Math.sin(x * 0.015 + phase * 0.7) * 16 + Math.sin(x * 0.03 - phase * 0.4) * 8;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Draw primary acoustic sine wave
+    ctx.beginPath();
+    ctx.lineWidth = 2;
+    const grad = ctx.createLinearGradient(0, 0, w, 0);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+    grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.65)');
+    grad.addColorStop(0.85, 'rgba(255, 85, 0, 0.85)');
+    grad.addColorStop(1, 'rgba(255, 85, 0, 0.2)');
+    ctx.strokeStyle = grad;
+
+    for (let x = 0; x < w; x += 3) {
+      const amp = (Math.sin(x * 0.006 + phase) * 0.5 + 0.5) * 28 + 4;
+      const y = midY + Math.sin(x * 0.02 + phase * 1.4) * amp;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Animate equalizer bars in hero
+    const bars = document.querySelectorAll('#hero-bars .youfy-hero-bar');
+    if (bars && bars.length > 0) {
+      bars.forEach((bar, idx) => {
+        const val = 20 + Math.abs(Math.sin(phase * 1.8 + idx * 0.6)) * 75;
+        bar.style.height = val + '%';
+      });
+    }
+
+    phase += 0.035;
+    animationId = requestAnimationFrame(drawHeroWaves);
+  }
+
+  drawHeroWaves();
+})();
+</script>
 
 # Youfy — Laboratório de IA & Player de Áudio
 
@@ -238,19 +367,19 @@ flowchart TD
 
     ---
 
-    O pacote [`youfy-audio`](pacotes/audio/) opera como funções puras sobre arrays (sem banco de dados nem rede), testável via sinais senoidais analíticos de 440 Hz e silêncio.
+    O pacote [`youfy-audio`](pacotes/audio.md) opera como funções puras sobre arrays (sem banco de dados nem rede), testável via sinais senoidais analíticos de 440 Hz e silêncio.
 
 -   :material-database: **Catálogo Resiliente com Quarentena**
 
     ---
 
-    O [`youfy-catalog`](pacotes/catalog/) persiste o acervo com modelos SQLAlchemy 2.0 e isola faixas corrompidas na tabela `ingest_failures`, garantindo que 8 mil faixas sejam processadas sem travamentos.
+    O [`youfy-catalog`](pacotes/catalog.md) persiste o acervo com modelos SQLAlchemy 2.0 e isola faixas corrompidas na tabela `ingest_failures`, garantindo que 8 mil faixas sejam processadas sem travamentos.
 
 -   :material-shuffle-variant: **Disjunção de Artista por Construção**
 
     ---
 
-    O algoritmo guloso por déficit em [`youfy-pipelines`](pacotes/pipelines/) impede matematicamente que o mesmo artista apareça no treino e no teste ($\text{artistas}(\text{train}) \cap \text{artistas}(\text{test}) = \emptyset$).
+    O algoritmo guloso por déficit em [`youfy-pipelines`](pacotes/pipelines.md) impede matematicamente que o mesmo artista apareça no treino e no teste ($\text{artistas}(\text{train}) \cap \text{artistas}(\text{test}) = \emptyset$).
 
 -   :material-lock-check: **Versionamento Estrito DVC**
 
