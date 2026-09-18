@@ -7,6 +7,8 @@ repo_url: https://github.com/oseiasdfarias/youfy
 theme:
   name: material
   language: pt-BR
+  logo: assets/icon.svg
+  favicon: assets/icon.svg
   features:
     - navigation.tabs
     - navigation.tabs.sticky
