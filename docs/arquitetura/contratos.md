@@ -10,19 +10,12 @@ A configuração de featurização viaja incorporada ao artefato do modelo trein
 
 ```mermaid
 flowchart TD
-    FS["FeatureSpec
-    sr: 22050 | n_mels: 128 | hop: 512 | n_frames: 1292"] --> Hash["SHA-256 (Primeiros 16 hexadecimais)"]
+    FS["FeatureSpec<br/>sr: 22050 - n_mels: 128 - hop: 512 - n_frames: 1292"] --> Hash["SHA-256 (16 hexadecimais)"]
     Hash --> FP["spec_fingerprint (ex: b8a7c14e9f02d51b)"]
     
-    FP --> DirF["data/features/melspec/b8a7c14e9f02d51b/
-    ├── _manifest.json
-    ├── fma_track_2.npy
-    └── fma_track_3.npy"]
+    FP --> DirF["data/features/melspec/{fingerprint}/<br/>- _manifest.json<br/>- fma_track_2.npy<br/>- fma_track_3.npy"]
     
-    FP --> DirS["data/splits/b8a7c14e9f02d51b/
-    ├── train.json
-    ├── val.json
-    └── test.json"]
+    FP --> DirS["data/splits/{fingerprint}/<br/>- train.json<br/>- val.json<br/>- test.json"]
 
     style FP fill:#431407,stroke:#ff5500,color:#fed7aa
     style DirF fill:#18181b,stroke:#27272a,color:#ededed

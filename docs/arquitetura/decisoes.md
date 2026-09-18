@@ -10,7 +10,7 @@ A concepção preliminar de utilizar raspagem ou APIs do YouTube foi descartada 
 
 ```mermaid
 flowchart TD
-    subgraph YouTube (Inviável)
+    subgraph S_YT["YouTube (Inviável)"]
         YT1["Termos de Serviço: Proíbe raspagem automatizada"]
         YT2["Dev Policy III.I.7-8: Proíbe separar componente de áudio"]
         YT3["Dev Policy III.I.9: Proíbe player em background"]
@@ -18,7 +18,7 @@ flowchart TD
         YT5["Cota de API: 10.000 un/dia (100 buscas/dia)"]
     end
 
-    subgraph FMA (Free Music Archive - Adotado)
+    subgraph S_FMA["Free Music Archive (FMA - Adotado)"]
         FMA1["Licenciamento Aberto Creative Commons"]
         FMA2["Benchmark MIR Acadêmico Consolidado"]
         FMA3["Conjunto fma_small: 8.000 faixas de 30s (~7.2 GB)"]
@@ -26,8 +26,8 @@ flowchart TD
         FMA5["Dataset local, 100% offline, sem custos ou rede"]
     end
 
-    style YouTube fill:#1c1012,stroke:#ef4444,color:#fca5a5
-    style FMA fill:#0f1715,stroke:#22c55e,color:#86efac
+    style S_YT fill:#1c1012,stroke:#ef4444,color:#fca5a5
+    style S_FMA fill:#0f1715,stroke:#22c55e,color:#86efac
 ```
 
 ### O que o Free Music Archive (FMA) viabiliza:
@@ -95,21 +95,21 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    subgraph Armadilha: Fundação Horizontal
+    subgraph S_FH["Armadilha: Fundação Horizontal"]
         FH1["Meses em infraestrutura e mensageria"] -.-> FH2["Nenhum modelo treinado"] -.-> FH3["Abandono do projeto"]
     end
 
-    subgraph Armadilha: Modelo Primeiro
+    subgraph S_MP["Armadilha: Modelo Primeiro"]
         MP1["Centenas de Jupyter Notebooks soltos"] -.-> MP2["Código sem contratos nem testes"] -.-> MP3["Impossível de servir ou monitorar"]
     end
 
-    subgraph Abordagem Youfy: Fatia Vertical Fina com Espinha MLOps
+    subgraph S_YF["Abordagem Youfy: Fatia Vertical Fina"]
         Y1["Infra magra: Postgres local + TUI Textual"]
         Y2["Espinha de MLOps rigorosa: DVC + MLflow + Testes de Invariantes"]
         Y3["Ciclo de ponta a ponta comprovado no primeiro mês"]
     end
 
-    style Armadilha: Fundação Horizontal fill:#18181b,stroke:#52525b,color:#a1a1aa
-    style Armadilha: Modelo Primeiro fill:#18181b,stroke:#52525b,color:#a1a1aa
-    style Abordagem Youfy: Fatia Vertical Fina com Espinha MLOps fill:#09090b,stroke:#22c55e,color:#f4f4f5
+    style S_FH fill:#18181b,stroke:#52525b,color:#a1a1aa
+    style S_MP fill:#18181b,stroke:#52525b,color:#a1a1aa
+    style S_YF fill:#09090b,stroke:#22c55e,color:#f4f4f5
 ```
