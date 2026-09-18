@@ -3,9 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import typer
+from youfy_audio.spec import FeatureSpec
 from youfy_catalog.db import session_scope
 from youfy_catalog.settings import Settings
 
+from .featurize import run_featurize
 from .ingest import run_ingest
 from .logging import configure_logging
 
@@ -37,3 +39,22 @@ def ingest_cmd(
             err=True,
         )
         raise typer.Exit(code=1)
+
+
+@pipeline.command("featurize")
+def featurize_cmd(
+    data_dir: Path = typer.Option(None),  # noqa: B008
+    n_mels: int = typer.Option(128),
+    hop_length: int = typer.Option(512),
+    n_frames: int = typer.Option(1292),
+) -> None:
+    configure_logging()
+    raiz = data_dir or Settings().data_dir
+    spec = FeatureSpec(n_mels=n_mels, hop_length=hop_length, n_frames=n_frames)
+    with session_scope() as session:
+        relatorio = run_featurize(session, data_dir=raiz, spec=spec)
+    typer.echo(
+        f"fingerprint={spec.fingerprint()} total={relatorio.total} "
+        f"computadas={relatorio.computed} puladas={relatorio.skipped} "
+        f"falhas={relatorio.failed}"
+    )
