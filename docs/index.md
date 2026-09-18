@@ -430,86 +430,228 @@ function nextTrack() {
 
 O Youfy implementa um ciclo de dados unidirecional e rigoroso:
 
-<div class="youfy-arch-pipeline">
-  <!-- Stage 1 -->
-  <div class="youfy-arch-stage">
-    <div class="youfy-arch-stage-header">
-      <div class="youfy-arch-stage-title">
-        <span style="color: #ff5500;">01.</span>
-        <span>Fundação de Dados &amp; Extração Acústica</span>
-      </div>
-      <span class="youfy-arch-stage-badge">offline-first • spec-1</span>
+<div class="youfy-arch-interactive-container">
+  <div class="youfy-arch-interactive-header">
+    <div class="youfy-arch-interactive-title">
+      <span style="display:inline-block; width:8px; height:8px; border-radius:2px; background:#ff5500;"></span>
+      <span>Pipeline Youfy em Tempo Real — Fluxo Contínuo de Dados &amp; Modelo</span>
     </div>
-    <div class="youfy-arch-flow">
-      <div class="youfy-arch-node">
-        <div class="youfy-arch-node-name">Free Music Archive</div>
-        <div class="youfy-arch-node-desc">Dataset fma_small com 8.000 faixas de 30s balanceadas em 8 gêneros.</div>
-      </div>
-      <div class="youfy-arch-node">
-        <div class="youfy-arch-node-name">youfy pipeline ingest</div>
-        <div class="youfy-arch-node-desc">Leitura idempotente no Postgres 16 com quarentena de falhas em ingest_failures.</div>
-      </div>
-      <div class="youfy-arch-node">
-        <div class="youfy-arch-node-name">youfy pipeline featurize</div>
-        <div class="youfy-arch-node-desc">Espectrogramas mel (128, 1292) .npy organizados por hash SHA-256 e DVC.</div>
-      </div>
+    <div class="youfy-arch-live-badge">
+      <span class="youfy-arch-live-dot"></span>
+      <span>ACTIVE SIMULATION • 60 FPS</span>
     </div>
   </div>
 
-  <div class="youfy-arch-connector">↓</div>
-
-  <!-- Stage 2 -->
-  <div class="youfy-arch-stage">
-    <div class="youfy-arch-stage-header">
-      <div class="youfy-arch-stage-title">
-        <span style="color: #ff5500;">02.</span>
-        <span>Particionamento MLOps &amp; Treinamento PyTorch</span>
-      </div>
-      <span class="youfy-arch-stage-badge">invariantes • dvc • mlflow</span>
-    </div>
-    <div class="youfy-arch-flow">
-      <div class="youfy-arch-node">
-        <div class="youfy-arch-node-name">youfy pipeline split</div>
-        <div class="youfy-arch-node-desc">Disjunção estrita de artistas por construção: Interseção = ∅ entre train/val/test.</div>
-      </div>
-      <div class="youfy-arch-node">
-        <div class="youfy-arch-node-name">PyTorch CNN 2D</div>
-        <div class="youfy-arch-node-desc">Treino supervisionado sobre mel-espectrogramas com extração de embeddings 256d.</div>
-      </div>
-      <div class="youfy-arch-node">
-        <div class="youfy-arch-node-name">MLflow Model Registry</div>
-        <div class="youfy-arch-node-desc">Rastreamento de métricas (Macro-F1) e registro de artefatos de modelo versionados.</div>
-      </div>
-    </div>
+  <div class="youfy-arch-canvas-wrap">
+    <canvas id="youfyArchCanvas" width="920" height="420"></canvas>
   </div>
 
-  <div class="youfy-arch-connector">↓</div>
-
-  <!-- Stage 3 -->
-  <div class="youfy-arch-stage">
-    <div class="youfy-arch-stage-header">
-      <div class="youfy-arch-stage-title">
-        <span style="color: #ff5500;">03.</span>
-        <span>Serving HTTP, Player &amp; Telemetria em Closed-Loop</span>
-      </div>
-      <span class="youfy-arch-stage-badge">fastapi • feedback loop</span>
+  <div class="youfy-arch-interactive-legend">
+    <div class="youfy-arch-legend-item">
+      <span class="youfy-arch-legend-dot" style="background: #38bdf8; box-shadow: 0 0 6px #38bdf8;"></span>
+      <span>Pacotes de Áudio (MP3 / Mel)</span>
     </div>
-    <div class="youfy-arch-flow">
-      <div class="youfy-arch-node">
-        <div class="youfy-arch-node-name">FastAPI Model Serving</div>
-        <div class="youfy-arch-node-desc">Rota /tracks/{id}/genre com validação estrita de FeatureSpec em produção.</div>
-      </div>
-      <div class="youfy-arch-node">
-        <div class="youfy-arch-node-name">Youfy Player (Web / TUI)</div>
-        <div class="youfy-arch-node-desc">Reprodução em tempo real com visualizador de espectro FFT e telemetria offline-ready.</div>
-      </div>
-      <div class="youfy-arch-node">
-        <div class="youfy-arch-node-name">Event Store (Postgres)</div>
-        <div class="youfy-arch-node-desc">POST /events append-only idempotente fechando o loop de aprendizado contínuo.</div>
-      </div>
+    <div class="youfy-arch-legend-item">
+      <span class="youfy-arch-legend-dot" style="background: #a855f7; box-shadow: 0 0 6px #a855f7;"></span>
+      <span>Pesos &amp; Embeddings (PyTorch)</span>
+    </div>
+    <div class="youfy-arch-legend-item">
+      <span class="youfy-arch-legend-dot" style="background: #22c55e; box-shadow: 0 0 6px #22c55e;"></span>
+      <span>Eventos de Escuta (Closed-Loop)</span>
     </div>
   </div>
 </div>
+
+<script>
+(function() {
+  const canvas = document.getElementById('youfyArchCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // Nodes definition
+  const nodes = [
+    // Stage 1: Data & Features
+    { id: 'fma', label: 'FMA Small', sub: '8.000 faixas mp3', x: 75, y: 80, w: 120, h: 54, color: '#38bdf8', icon: '🎵' },
+    { id: 'ingest', label: 'youfy ingest', sub: 'Idempotência & Quarentena', x: 250, y: 80, w: 140, h: 54, color: '#38bdf8', icon: '⚡' },
+    { id: 'features', label: 'youfy featurize', sub: 'Mel (128, 1292) + DVC', x: 440, y: 80, w: 140, h: 54, color: '#38bdf8', icon: '📊' },
+
+    // Stage 2: MLOps & Training
+    { id: 'split', label: 'youfy split', sub: 'Disjunção de Artistas', x: 670, y: 80, w: 140, h: 54, color: '#a855f7', icon: '✂️' },
+    { id: 'train', label: 'PyTorch CNN', sub: 'Supervisionado Mel 2D', x: 670, y: 210, w: 140, h: 54, color: '#a855f7', icon: '🧠' },
+    { id: 'registry', label: 'MLflow Registry', sub: 'Macro-F1 & Gate Promo', x: 440, y: 210, w: 140, h: 54, color: '#a855f7', icon: '🏷️' },
+
+    // Stage 3: Serving & Closed-Loop
+    { id: 'serving', label: 'FastAPI Serving', sub: 'Inferência /genre', x: 250, y: 210, w: 140, h: 54, color: '#22c55e', icon: '🚀' },
+    { id: 'player', label: 'Youfy Player', sub: 'FFT + Escuta Real', x: 250, y: 340, w: 140, h: 54, color: '#22c55e', icon: '🎧' },
+    { id: 'events', label: 'Postgres EventStore', sub: 'Append-only Closed Loop', x: 550, y: 340, w: 160, h: 54, color: '#22c55e', icon: '🔄' }
+  ];
+
+  // Connections definition
+  const links = [
+    { from: 'fma', to: 'ingest', color: '#38bdf8' },
+    { from: 'ingest', to: 'features', color: '#38bdf8' },
+    { from: 'features', to: 'split', color: '#38bdf8' },
+    { from: 'split', to: 'train', color: '#a855f7' },
+    { from: 'train', to: 'registry', color: '#a855f7' },
+    { from: 'registry', to: 'serving', color: '#a855f7' },
+    { from: 'serving', to: 'player', color: '#22c55e' },
+    { from: 'player', to: 'events', color: '#22c55e' },
+    { from: 'events', to: 'train', color: '#22c55e', loop: true }
+  ];
+
+  // Animated particles flowing along links
+  const particles = [];
+  const PARTICLE_COUNT = 24;
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push({
+      linkIndex: i % links.length,
+      progress: Math.random(),
+      speed: 0.006 + Math.random() * 0.005,
+      size: 2.5 + Math.random() * 2
+    });
+  }
+
+  function getNode(id) {
+    return nodes.find(n => n.id === id);
+  }
+
+  function drawNode(n) {
+    // Card background
+    ctx.fillStyle = '#111116';
+    ctx.strokeStyle = n.color;
+    ctx.lineWidth = 1.2;
+    
+    ctx.beginPath();
+    ctx.roundRect(n.x - n.w / 2, n.y - n.h / 2, n.w, n.h, 8);
+    ctx.fill();
+    ctx.stroke();
+
+    // Subtle glow
+    ctx.shadowColor = n.color;
+    ctx.shadowBlur = 8;
+    ctx.stroke();
+    ctx.shadowBlur = 0; // reset
+
+    // Icon
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(n.icon, n.x - n.w / 2 + 10, n.y - 4);
+
+    // Label
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '600 11.5px Inter, -apple-system, sans-serif';
+    ctx.fillText(n.label, n.x - n.w / 2 + 32, n.y - 5);
+
+    // Subtitle
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '9.5px Inter, -apple-system, sans-serif';
+    ctx.fillText(n.sub, n.x - n.w / 2 + 10, n.y + 14);
+  }
+
+  function drawLink(link) {
+    const fromNode = getNode(link.from);
+    const toNode = getNode(link.to);
+    if (!fromNode || !toNode) return;
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+
+    if (link.loop) {
+      // Curved feedback loop from events back to train
+      ctx.moveTo(fromNode.x, fromNode.y);
+      ctx.bezierCurveTo(fromNode.x + 80, fromNode.y - 40, toNode.x + 100, toNode.y + 60, toNode.x, toNode.y);
+    } else {
+      ctx.moveTo(fromNode.x, fromNode.y);
+      ctx.lineTo(toNode.x, toNode.y);
+    }
+    ctx.stroke();
+  }
+
+  function getPointOnLink(link, t) {
+    const fromNode = getNode(link.from);
+    const toNode = getNode(link.to);
+    if (!fromNode || !toNode) return { x: 0, y: 0 };
+
+    if (link.loop) {
+      // Cubic Bezier interpolation
+      const p0 = { x: fromNode.x, y: fromNode.y };
+      const p1 = { x: fromNode.x + 80, y: fromNode.y - 40 };
+      const p2 = { x: toNode.x + 100, y: toNode.y + 60 };
+      const p3 = { x: toNode.x, y: toNode.y };
+
+      const cx = 3 * (p1.x - p0.x);
+      const bx = 3 * (p2.x - p1.x) - cx;
+      const ax = p3.x - p0.x - cx - bx;
+
+      const cy = 3 * (p1.y - p0.y);
+      const by = 3 * (p2.y - p1.y) - cy;
+      const ay = p3.y - p0.y - cy - by;
+
+      const x = ax * (t ** 3) + bx * (t ** 2) + cx * t + p0.x;
+      const y = ay * (t ** 3) + by * (t ** 2) + cy * t + p0.y;
+      return { x, y };
+    } else {
+      return {
+        x: fromNode.x + (toNode.x - fromNode.x) * t,
+        y: fromNode.y + (toNode.y - fromNode.y) * t
+      };
+    }
+  }
+
+  let animationFrameId;
+
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw grid background subtle dots
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+    for (let x = 20; x < canvas.width; x += 30) {
+      for (let y = 20; y < canvas.height; y += 30) {
+        ctx.beginPath();
+        ctx.arc(x, y, 1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Draw Links
+    links.forEach(drawLink);
+
+    // Update & Draw Particles
+    particles.forEach(p => {
+      p.progress += p.speed;
+      if (p.progress >= 1) {
+        p.progress = 0;
+      }
+      const link = links[p.linkIndex];
+      const pos = getPointOnLink(link, p.progress);
+
+      ctx.fillStyle = link.color;
+      ctx.shadowColor = link.color;
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+
+    // Draw Nodes
+    nodes.forEach(drawNode);
+
+    // Draw Stage markers
+    ctx.font = '600 10px var(--md-font-code, monospace)';
+    ctx.fillStyle = '#6b7280';
+    ctx.fillText('ESTÁGIO 1: ENGENHARIA DE DADOS & ACÚSTICA', 50, 30);
+    ctx.fillText('ESTÁGIO 2: MLOPS, PARTIÇÃO & TREINO PYTORCH', 440, 160);
+    ctx.fillText('ESTÁGIO 3: SERVING, PLAYER REAL & CLOSED-LOOP RETRAINING', 50, 300);
+
+    animationFrameId = requestAnimationFrame(render);
+  }
+
+  render();
+})();
+</script>
 
 ---
 
