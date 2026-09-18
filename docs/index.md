@@ -432,39 +432,43 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
 
 ```mermaid
 flowchart TD
-    subgraph Catálogo & Áudio
-        A["Free Music Archive (fma_small)"] --> B["youfy pipeline ingest"]
-        B --> C[("PostgreSQL 16")]
-        B --> D["Áudio Bruto (.mp3)"]
-        B -.-> Q["ingest_failures (Quarentena)"]
+    subgraph S_Data["1. Catálogo & Extração Acústica"]
+        direction TB
+        FMA["Free Music Archive (fma_small)"] --> Ingest["youfy pipeline ingest"]
+        Ingest --> DB[("PostgreSQL 16 (Catalog)")]
+        Ingest -.-> Quarantine[("ingest_failures (Quarentena)")]
+        Ingest --> Feat["youfy pipeline featurize"]
+        Feat --> MelStore[("data/features/*.npy + DVC Remote")]
     end
 
-    subgraph MLOps & Features
-        D --> E["youfy pipeline featurize"]
-        E --> F["Mel-espectrogramas (.npy)"]
-        E --> G["_manifest.json (SHA-256)"]
-        F --> H["DVC Remote (Local/S3)"]
-        F --> I["youfy pipeline split"]
-        I --> J["splits/{train,val,test}.json"]
+    subgraph S_MLOps["2. Particionamento & Treinamento"]
+        direction TB
+        MelStore --> Split["youfy pipeline split (Disjunção de Artistas)"]
+        Split --> Partitions[("splits/{train,val,test}.parquet")]
+        Partitions --> Train["Treino PyTorch (CNN 2D Acústica)"]
+        Train --> Registry[("MLflow Model Registry (Métricas & Artefatos)")]
     end
 
-    subgraph Treino & Serving
-        J --> K["Treino PyTorch (CNN 2D)"]
-        K --> L["MLflow Tracking & Registry"]
-        L --> M["Gate de Promoção Codificado"]
-        M --> N["Serving HTTP (FastAPI)"]
+    subgraph S_Serving["3. Serving & Closed-Loop Telemetria"]
+        direction TB
+        Registry --> Gate{"Gate de Promoção (Macro-F1 & Invariantes)"}
+        Gate -->|Aprovado| Server["FastAPI Serving (/tracks/{id}/genre)"]
+        Server --> Player["Youfy Player (Web / TUI)"]
+        Player --> Telemetry["POST /events (play_start, skip, complete)"]
+        Telemetry --> EventStore[("Postgres: Event Store (Append-Only)")]
     end
 
-    subgraph Experiência & Telemetria
-        N --> O["Youfy Player (TUI / Web)"]
-        O --> P["POST /events (Append-only)"]
-        P --> C
-    end
+    S_Data ==> S_MLOps
+    S_MLOps ==> S_Serving
 
-    classDef accent fill:#ff5500,stroke:#ff5500,color:#fff;
-    classDef subtle fill:#18181b,stroke:#27272a,color:#ededed;
-    class B,E,I,K,N,O accent;
-    class A,C,D,F,G,H,J,L,M,P,Q subtle;
+    classDef stage fill:#18181b,stroke:#3b82f6,stroke-width:1.5px,color:#f4f4f5;
+    classDef storage fill:#09090b,stroke:#10b981,stroke-width:1.5px,color:#34d399;
+    classDef action fill:#27272a,stroke:#ff5500,stroke-width:2px,color:#ffffff;
+    classDef gate fill:#27272a,stroke:#a855f7,stroke-width:1.5px,color:#e4e4e7;
+    
+    class Ingest,Feat,Split,Train,Server,Player,Telemetry action;
+    class DB,Quarantine,MelStore,Partitions,Registry,EventStore storage;
+    class Gate gate;
 ```
 
 ---

@@ -96,20 +96,21 @@ flowchart TD
 ```mermaid
 flowchart TD
     subgraph S_FH["Armadilha: Fundação Horizontal"]
-        FH1["Meses em infraestrutura e mensageria"] -.-> FH2["Nenhum modelo treinado"] -.-> FH3["Abandono do projeto"]
+        FH1["Meses em infraestrutura e mensageria"] --> FH2["Nenhum modelo treinado"] --> FH3["Abandono do projeto"]
     end
 
     subgraph S_MP["Armadilha: Modelo Primeiro"]
-        MP1["Centenas de Jupyter Notebooks soltos"] -.-> MP2["Código sem contratos nem testes"] -.-> MP3["Impossível de servir ou monitorar"]
+        MP1["Centenas de Jupyter Notebooks soltos"] --> MP2["Código sem contratos nem testes"] --> MP3["Impossível de servir ou monitorar"]
     end
 
     subgraph S_YF["Abordagem Youfy: Fatia Vertical Fina"]
-        Y1["Infra magra: Postgres local + TUI Textual"]
-        Y2["Espinha de MLOps rigorosa: DVC + MLflow + Testes de Invariantes"]
-        Y3["Ciclo de ponta a ponta comprovado no primeiro mês"]
+        Y1["Infra magra: Postgres local + TUI Textual"] --> Y2["Espinha de MLOps rigorosa: DVC + MLflow + Testes de Invariantes"] --> Y3["Ciclo de ponta a ponta comprovado no primeiro mês"]
     end
 
-    style S_FH fill:#18181b,stroke:#52525b,color:#a1a1aa
-    style S_MP fill:#18181b,stroke:#52525b,color:#a1a1aa
-    style S_YF fill:#09090b,stroke:#22c55e,color:#f4f4f5
+    S_FH -. "evitar" .-> S_MP
+    S_MP -. "evitar" .-> S_YF
+
+    style S_FH fill:#18181b,stroke:#ef4444,stroke-width:1.5px,color:#fca5a5
+    style S_MP fill:#18181b,stroke:#f59e0b,stroke-width:1.5px,color:#fde68a
+    style S_YF fill:#09090b,stroke:#22c55e,stroke-width:2px,color:#f4f4f5
 ```
