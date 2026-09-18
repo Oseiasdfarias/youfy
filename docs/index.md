@@ -176,10 +176,10 @@ Experimente abaixo o reprodutor musical integrado com o componente de inferênci
     </div>
   </div>
 
-  <!-- Real Spectrogram Waveform Bars -->
+  <!-- Real Spectrogram Waveform Bars (Web Audio FFT Powered) -->
   <div style="space-y: 0.5rem; margin-bottom: 1.25rem;">
-    <div class="youfy-player-waveform" id="player-bars-container">
-      <!-- 24 Real Spectrogram Bins dynamically animated -->
+    <div class="youfy-player-waveform" style="padding: 0; background: #050507;">
+      <canvas id="youfy-player-fft-canvas" class="youfy-fft-canvas" height="68"></canvas>
     </div>
     <div style="display: flex; justify-content: space-between; font-family: var(--md-font-code); font-size: 0.72rem; color: #71717a; margin-top: 0.4rem;">
       <span id="player-time">00:14</span>
@@ -209,33 +209,69 @@ Experimente abaixo o reprodutor musical integrado com o componente de inferênci
 </div>
 
 <script>
-(function() {
-  const container = document.getElementById('player-bars-container');
-  if (!container) return;
-
-  const barCount = 28;
-  const baseHeights = [
-    18, 25, 34, 45, 30, 52, 68, 40, 85, 95, 60, 48, 
-    72, 88, 55, 35, 65, 42, 58, 76, 32, 44, 28, 50,
-    38, 22, 30, 16
-  ];
-  
-  for (let i = 0; i < barCount; i++) {
-    const bar = document.createElement('div');
-    bar.className = 'youfy-player-bar';
-    if (i < 13) bar.classList.add('played');
-    if (i === 13) bar.classList.add('highlight');
-    bar.style.height = baseHeights[i % baseHeights.length] + '%';
-    container.appendChild(bar);
-  }
-})();
-
 let audioCtx = null;
+let analyser = null;
+let masterGain = null;
 let isPlaying = false;
 let synthTimer = null;
-let animTimer = null;
+let animFrameId = null;
 let currentSeconds = 14;
 const totalSeconds = 30;
+
+// Canvas setup
+const pCanvas = document.getElementById('youfy-player-fft-canvas');
+const pCtx = pCanvas ? pCanvas.getContext('2d') : null;
+
+function resizePlayerCanvas() {
+  if (!pCanvas) return;
+  pCanvas.width = pCanvas.parentElement.clientWidth;
+  pCanvas.height = 68;
+}
+window.addEventListener('resize', resizePlayerCanvas);
+resizePlayerCanvas();
+
+// Render static preview when idle
+function drawPlayerIdle() {
+  if (!pCtx || isPlaying) return;
+  const w = pCanvas.width;
+  const h = pCanvas.height;
+  pCtx.clearRect(0, 0, w, h);
+
+  const numBars = 32;
+  const barGap = 3;
+  const barWidth = Math.max(3, (w - (numBars - 1) * barGap) / numBars);
+  const currentIdx = Math.floor((currentSeconds / totalSeconds) * numBars);
+
+  const mockHeights = [
+    0.22, 0.35, 0.48, 0.62, 0.40, 0.75, 0.90, 0.55,
+    0.85, 0.98, 0.65, 0.50, 0.80, 0.92, 0.60, 0.42,
+    0.70, 0.52, 0.65, 0.82, 0.38, 0.50, 0.32, 0.58,
+    0.45, 0.28, 0.36, 0.20, 0.30, 0.45, 0.25, 0.18
+  ];
+
+  for (let i = 0; i < numBars; i++) {
+    const bh = Math.max(4, mockHeights[i % mockHeights.length] * (h - 10));
+    const x = i * (barWidth + barGap);
+    const y = h - bh;
+
+    if (i < currentIdx) {
+      pCtx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      pCtx.shadowBlur = 0;
+    } else if (i === currentIdx) {
+      pCtx.fillStyle = '#ff5500';
+      pCtx.shadowColor = '#ff5500';
+      pCtx.shadowBlur = 8;
+    } else {
+      pCtx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+      pCtx.shadowBlur = 0;
+    }
+
+    pCtx.beginPath();
+    pCtx.roundRect(x, y, barWidth, bh, [2, 2, 0, 0]);
+    pCtx.fill();
+  }
+}
+setTimeout(drawPlayerIdle, 50);
 
 function togglePlaySynth() {
   if (isPlaying) {
@@ -248,66 +284,118 @@ function togglePlaySynth() {
 function startSynth() {
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!audioCtx) audioCtx = new AudioContext();
+    if (!audioCtx) {
+      audioCtx = new AudioContext();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 64; // Produces 32 real frequency bins
+      analyser.smoothingTimeConstant = 0.75;
+
+      masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      masterGain.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
     isPlaying = true;
     document.getElementById('player-play-icon').textContent = '❚❚';
 
-    // Arpeggiated synthesizer pattern
-    const notes = [220.0, 261.63, 329.63, 440.0, 329.63, 261.63, 392.0, 493.88];
+    // Rich polyphonic arpeggio sequence
+    const notes = [
+      220.0, 261.63, 329.63, 440.0,  // Am arpeggio
+      329.63, 392.0, 493.88, 523.25, // Em / C harmonics
+      349.23, 440.0, 523.25, 659.25  // F maj7 chord tones
+    ];
     let noteIdx = 0;
 
-    function playNote() {
+    function playSynthNote() {
       if (!isPlaying) return;
       const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(notes[noteIdx % notes.length], audioCtx.currentTime);
+      const osc2 = audioCtx.createOscillator();
+      const noteGain = audioCtx.createGain();
+
+      const freq = notes[noteIdx % notes.length];
       noteIdx++;
 
-      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
 
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(freq * 0.5, audioCtx.currentTime); // Sub-bass octave
 
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.38);
+      const now = audioCtx.currentTime;
+      noteGain.gain.setValueAtTime(0.18, now);
+      noteGain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+
+      osc.connect(noteGain);
+      osc2.connect(noteGain);
+      noteGain.connect(masterGain);
+
+      osc.start(now);
+      osc2.start(now);
+      osc.stop(now + 0.35);
+      osc2.stop(now + 0.35);
     }
 
     synthTimer = setInterval(() => {
-      playNote();
-      currentSeconds += 0.25;
+      playSynthNote();
+      currentSeconds += 0.2;
       if (currentSeconds >= totalSeconds) currentSeconds = 0;
       
       const mins = Math.floor(currentSeconds / 60);
       const secs = Math.floor(currentSeconds % 60);
       document.getElementById('player-time').textContent = 
         String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
-    }, 250);
+    }, 200);
 
-    // Live continuous spectrum bars animation
-    let tick = 0;
-    animTimer = setInterval(() => {
-      tick++;
-      const bars = document.querySelectorAll('#player-bars-container .youfy-player-bar');
-      const progressIdx = Math.floor((currentSeconds / totalSeconds) * bars.length);
+    // FFT Real-time animation loop via requestAnimationFrame
+    const bufferLength = analyser.frequencyBinCount; // 32 frequency bins
+    const dataArray = new Uint8Array(bufferLength);
 
-      bars.forEach((bar, idx) => {
-        const oscVal = 15 + Math.abs(Math.sin(tick * 0.2 + idx * 0.45)) * 75;
-        bar.style.height = oscVal + '%';
+    function renderFFT() {
+      if (!isPlaying) return;
+      analyser.getByteFrequencyData(dataArray);
 
-        if (idx < progressIdx) {
-          bar.className = 'youfy-player-bar played';
-        } else if (idx === progressIdx) {
-          bar.className = 'youfy-player-bar highlight';
+      const w = pCanvas.width;
+      const h = pCanvas.height;
+      pCtx.clearRect(0, 0, w, h);
+
+      const barGap = 3;
+      const barWidth = Math.max(3, (w - (bufferLength - 1) * barGap) / bufferLength);
+      const progressIdx = Math.floor((currentSeconds / totalSeconds) * bufferLength);
+
+      for (let i = 0; i < bufferLength; i++) {
+        const binValue = dataArray[i];
+        // Calculate bar height with dynamic amplification
+        const rawHeight = (binValue / 255) * (h - 8);
+        const bh = Math.max(4, rawHeight);
+        const x = i * (barWidth + barGap);
+        const y = h - bh;
+
+        if (i < progressIdx) {
+          pCtx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+          pCtx.shadowBlur = 0;
+        } else if (i === progressIdx) {
+          pCtx.fillStyle = '#ff5500';
+          pCtx.shadowColor = '#ff5500';
+          pCtx.shadowBlur = 12;
         } else {
-          bar.className = 'youfy-player-bar';
+          // Future unplayed bars pulse with softer ambient level
+          const softAlpha = 0.15 + (binValue / 255) * 0.35;
+          pCtx.fillStyle = `rgba(255, 255, 255, ${softAlpha.toFixed(2)})`;
+          pCtx.shadowBlur = 0;
         }
-      });
-    }, 60);
+
+        pCtx.beginPath();
+        pCtx.roundRect(x, y, barWidth, bh, [2, 2, 0, 0]);
+        pCtx.fill();
+      }
+
+      animFrameId = requestAnimationFrame(renderFFT);
+    }
+
+    renderFFT();
 
   } catch (err) {
     console.error('Audio synthesis failed:', err);
@@ -317,18 +405,21 @@ function startSynth() {
 function stopSynth() {
   isPlaying = false;
   if (synthTimer) clearInterval(synthTimer);
-  if (animTimer) clearInterval(animTimer);
+  if (animFrameId) cancelAnimationFrame(animFrameId);
   document.getElementById('player-play-icon').textContent = '▶';
+  setTimeout(drawPlayerIdle, 100);
 }
 
 function prevTrack() {
   currentSeconds = 0;
   document.getElementById('player-time').textContent = '00:00';
+  drawPlayerIdle();
 }
 
 function nextTrack() {
   currentSeconds = 0;
   document.getElementById('player-time').textContent = '00:00';
+  drawPlayerIdle();
 }
 </script>
 

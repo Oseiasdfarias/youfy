@@ -246,20 +246,26 @@ body {
   display: flex;
   align-items: flex-end;
   gap: 3px;
-  height: 58px;
+  height: 68px;
   background: #050507;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
-  padding: 0.5rem 0.65rem;
+  padding: 0.4rem 0.5rem;
   overflow: hidden;
   position: relative;
+}
+
+.youfy-fft-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .youfy-player-bar {
   flex: 1;
   background: rgba(255, 255, 255, 0.25);
   border-radius: 2px;
-  transition: height 0.07s ease, background-color 0.15s ease;
+  transition: height 0.05s ease, background-color 0.1s ease;
   min-height: 4px;
 }
 
@@ -269,7 +275,7 @@ body {
 
 .youfy-player-bar.highlight {
   background: #ff5500;
-  box-shadow: 0 0 10px rgba(255, 85, 0, 0.7);
+  box-shadow: 0 0 12px rgba(255, 85, 0, 0.8);
 }
 
 .youfy-ctrl-btn {
