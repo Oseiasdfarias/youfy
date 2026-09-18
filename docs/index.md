@@ -153,86 +153,88 @@ Experimente abaixo o reprodutor musical integrado com o componente de inferênci
   <!-- Track Header & ML Prediction -->
   <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
     <div>
-      <span style="font-family: var(--md-font-code); font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: var(--md-default-bg-color--lighter); border: 1px solid var(--vercel-border-color); color: var(--md-default-fg-color--light);">
-        fma:track:001005 • subset: small
+      <span style="font-family: var(--md-font-code); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); color: #a1a1aa; text-transform: uppercase;">
+        fma:track:001005 • fma_small
       </span>
-      <h3 style="margin: 0.4rem 0 0.1rem 0; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em;">
+      <h3 style="margin: 0.4rem 0 0.1rem 0; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; color: #ffffff;">
         Aura of the Latent Valley
       </h3>
-      <p style="margin: 0; font-size: 0.82rem; color: var(--md-default-fg-color--light);">
-        Artista Sintético #14 • Álbum: Discrete Waveforms
+      <p style="margin: 0; font-size: 0.82rem; color: #a1a1aa;">
+        Synthetic Artist #14 • Album: Discrete Waveforms
       </p>
     </div>
 
-    <!-- Live ML Inference Tag -->
+    <!-- Live ML Prediction Badge -->
     <div style="text-align: right;">
-      <div style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; border-radius: 6px; background: var(--md-default-bg-color); border: 1px solid var(--vercel-border-color); font-family: var(--md-font-code); font-size: 0.8rem; font-weight: 600;">
-        <span style="width: 8px; height: 8px; border-radius: 50%; background: #22c55e;"></span>
+      <div style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; border-radius: 6px; background: rgba(24, 24, 27, 0.9); border: 1px solid rgba(255, 255, 255, 0.12); font-family: var(--md-font-code); font-size: 0.8rem; font-weight: 600; color: #ffffff;">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px rgba(34, 197, 94, 0.8);"></span>
         <span>Rock: 94.2%</span>
       </div>
-      <div style="font-family: var(--md-font-code); font-size: 0.7rem; color: var(--md-default-fg-color--lighter); margin-top: 0.25rem;">
-        model_version: clf-v1.2 (PyTorch CNN)
+      <div style="font-family: var(--md-font-code); font-size: 0.7rem; color: #71717a; margin-top: 0.25rem;">
+        model_version: clf-v1.2
       </div>
     </div>
   </div>
 
-  <!-- Animated Frequency Bars & Waveform Canvas -->
-  <div style="background: var(--md-default-bg-color); border: 1px solid var(--vercel-border-color); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-    <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 64px; gap: 3px; overflow: hidden; padding-bottom: 4px;" id="eq-container">
-      <div class="youfy-eq-bar" style="height: 25%;"></div>
-      <div class="youfy-eq-bar" style="height: 45%;"></div>
-      <div class="youfy-eq-bar" style="height: 70%;"></div>
-      <div class="youfy-eq-bar" style="height: 30%;"></div>
-      <div class="youfy-eq-bar" style="height: 85%;"></div>
-      <div class="youfy-eq-bar" style="height: 60%;"></div>
-      <div class="youfy-eq-bar" style="height: 90%;"></div>
-      <div class="youfy-eq-bar" style="height: 40%;"></div>
-      <div class="youfy-eq-bar" style="height: 75%; background: #ff5500;"></div>
-      <div class="youfy-eq-bar" style="height: 55%;"></div>
-      <div class="youfy-eq-bar" style="height: 80%;"></div>
-      <div class="youfy-eq-bar" style="height: 35%;"></div>
-      <div class="youfy-eq-bar" style="height: 65%;"></div>
-      <div class="youfy-eq-bar" style="height: 95%;"></div>
-      <div class="youfy-eq-bar" style="height: 50%;"></div>
-      <div class="youfy-eq-bar" style="height: 20%;"></div>
+  <!-- Real Spectrogram Waveform Bars -->
+  <div style="space-y: 0.5rem; margin-bottom: 1.25rem;">
+    <div class="youfy-player-waveform" id="player-bars-container">
+      <!-- 24 Real Spectrogram Bins dynamically animated -->
     </div>
-    
-    <!-- Progress & Scrub Bar -->
-    <div style="display: flex; align-items: center; justify-content: space-between; font-family: var(--md-font-code); font-size: 0.72rem; color: var(--md-default-fg-color--lighter); margin-top: 0.5rem;">
-      <span id="player-time">00:00</span>
-      <div style="flex-grow: 1; height: 4px; background: var(--md-default-bg-color--lighter); border-radius: 2px; margin: 0 0.75rem; position: relative; overflow: hidden;">
-        <div id="player-progress" style="width: 0%; height: 100%; background: var(--md-default-fg-color); transition: width 0.2s linear;"></div>
-      </div>
-      <span>00:30 (FMA Clip)</span>
+    <div style="display: flex; justify-content: space-between; font-family: var(--md-font-code); font-size: 0.72rem; color: #71717a; margin-top: 0.4rem;">
+      <span id="player-time">00:14</span>
+      <span>-00:16 (30s FMA clip)</span>
     </div>
   </div>
 
-  <!-- Player Controls & Telemetry -->
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-    <div style="display: flex; align-items: center; gap: 0.75rem;">
-      <button id="btn-play-pause" onclick="togglePlaySynth()" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.25rem; border-radius: 6px; background: var(--md-default-fg-color); color: var(--md-default-bg-color); font-weight: 600; font-size: 0.85rem; border: none; cursor: pointer;">
-        <span id="play-icon">▶</span> <span id="play-text">Tocar Áudio Sintético</span>
+  <!-- Controls Bar & Telemetry Indicator -->
+  <div style="display: flex; items-center; justify-content: space-between; align-items: center; pt-2; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 0.85rem; flex-wrap: wrap; gap: 0.75rem;">
+    <!-- Media Buttons -->
+    <div style="display: flex; align-items: center; gap: 0.85rem;">
+      <button class="youfy-ctrl-btn" onclick="prevTrack()" title="Faixa Anterior">⏮</button>
+      <button class="youfy-play-btn-circle" id="btn-player-play" onclick="togglePlaySynth()" title="Reproduzir / Pausar">
+        <span id="player-play-icon">▶</span>
       </button>
-      <span style="font-family: var(--md-font-code); font-size: 0.75rem; color: var(--md-default-fg-color--lighter);">
-        22.05 kHz • 128 mel bins • ref=1.0
-      </span>
+      <button class="youfy-ctrl-btn" onclick="nextTrack()" title="Próxima Faixa">⏭</button>
     </div>
 
-    <!-- Live Telemetry Status -->
-    <div style="font-family: var(--md-font-code); font-size: 0.72rem; color: var(--md-default-fg-color--light); display: flex; align-items: center; gap: 0.5rem;">
-      <span style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e;"></span>
-      <span>telemetry: <strong>POST /events</strong> (play_start)</span>
-      <span style="color: var(--md-default-fg-color--lighter);">|</span>
-      <span>actor: <strong>human:osfarias</strong></span>
+    <!-- Telemetry Indicator -->
+    <div style="display: flex; align-items: center; gap: 0.5rem; font-family: var(--md-font-code); font-size: 0.72rem; color: #a1a1aa;">
+      <span style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);"></span>
+      <span>actor: <strong style="color: #ffffff;">human:osfarias</strong></span>
+      <span style="color: #52525b;">|</span>
+      <span>surface: <strong style="color: #ffffff;">search</strong></span>
     </div>
   </div>
 </div>
 
 <script>
+(function() {
+  const container = document.getElementById('player-bars-container');
+  if (!container) return;
+
+  const barCount = 28;
+  const baseHeights = [
+    18, 25, 34, 45, 30, 52, 68, 40, 85, 95, 60, 48, 
+    72, 88, 55, 35, 65, 42, 58, 76, 32, 44, 28, 50,
+    38, 22, 30, 16
+  ];
+  
+  for (let i = 0; i < barCount; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'youfy-player-bar';
+    if (i < 13) bar.classList.add('played');
+    if (i === 13) bar.classList.add('highlight');
+    bar.style.height = baseHeights[i % baseHeights.length] + '%';
+    container.appendChild(bar);
+  }
+})();
+
 let audioCtx = null;
 let isPlaying = false;
 let synthTimer = null;
-let currentSeconds = 0;
+let animTimer = null;
+let currentSeconds = 14;
 const totalSeconds = 30;
 
 function togglePlaySynth() {
@@ -250,16 +252,9 @@ function startSynth() {
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
     isPlaying = true;
-    document.getElementById('play-icon').textContent = '❚❚';
-    document.getElementById('play-text').textContent = 'Pausar Áudio';
+    document.getElementById('player-play-icon').textContent = '❚❚';
 
-    // Animate equalizer bars
-    const bars = document.querySelectorAll('.youfy-eq-bar');
-    bars.forEach((bar, idx) => {
-      bar.classList.add('active-' + ((idx % 8) + 1));
-    });
-
-    // Play chord progression (A minor synth chord arpeggio)
+    // Arpeggiated synthesizer pattern
     const notes = [220.0, 261.63, 329.63, 440.0, 329.63, 261.63, 392.0, 493.88];
     let noteIdx = 0;
 
@@ -291,10 +286,28 @@ function startSynth() {
       const secs = Math.floor(currentSeconds % 60);
       document.getElementById('player-time').textContent = 
         String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
-      
-      const pct = (currentSeconds / totalSeconds) * 100;
-      document.getElementById('player-progress').style.width = pct + '%';
     }, 250);
+
+    // Live continuous spectrum bars animation
+    let tick = 0;
+    animTimer = setInterval(() => {
+      tick++;
+      const bars = document.querySelectorAll('#player-bars-container .youfy-player-bar');
+      const progressIdx = Math.floor((currentSeconds / totalSeconds) * bars.length);
+
+      bars.forEach((bar, idx) => {
+        const oscVal = 15 + Math.abs(Math.sin(tick * 0.2 + idx * 0.45)) * 75;
+        bar.style.height = oscVal + '%';
+
+        if (idx < progressIdx) {
+          bar.className = 'youfy-player-bar played';
+        } else if (idx === progressIdx) {
+          bar.className = 'youfy-player-bar highlight';
+        } else {
+          bar.className = 'youfy-player-bar';
+        }
+      });
+    }, 60);
 
   } catch (err) {
     console.error('Audio synthesis failed:', err);
@@ -304,13 +317,18 @@ function startSynth() {
 function stopSynth() {
   isPlaying = false;
   if (synthTimer) clearInterval(synthTimer);
-  document.getElementById('play-icon').textContent = '▶';
-  document.getElementById('play-text').textContent = 'Tocar Áudio Sintético';
+  if (animTimer) clearInterval(animTimer);
+  document.getElementById('player-play-icon').textContent = '▶';
+}
 
-  const bars = document.querySelectorAll('.youfy-eq-bar');
-  bars.forEach((bar, idx) => {
-    bar.className = 'youfy-eq-bar';
-  });
+function prevTrack() {
+  currentSeconds = 0;
+  document.getElementById('player-time').textContent = '00:00';
+}
+
+function nextTrack() {
+  currentSeconds = 0;
+  document.getElementById('player-time').textContent = '00:00';
 }
 </script>
 
