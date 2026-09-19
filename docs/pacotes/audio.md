@@ -83,10 +83,10 @@ flowchart TD
     File --> Decode --> Mono --> Resample --> Signal
     Signal --> STFT --> Power --> MelFilter --> LogPower --> CropPad --> Tensor
 
-    classDef raw fill:#161618,stroke:#3b82f6,stroke-width:1.5px,color:#f4f4f5;
-    classDef proc fill:#18181b,stroke:#a855f7,stroke-width:1.5px,color:#f4f4f5;
-    classDef dsp fill:#18181b,stroke:#10b981,stroke-width:1.5px,color:#f4f4f5;
-    classDef out fill:#09090b,stroke:#06b6d4,stroke-width:2px,color:#38bdf8;
+    classDef raw stroke:#71717a,stroke-width:2px;
+    classDef proc stroke:#8b5cf6,stroke-width:2px;
+    classDef dsp stroke:#10b981,stroke-width:2px;
+    classDef out stroke:#06b6d4,stroke-width:2px;
     class File raw;
     class Probe,Meta,Decode,Mono,Resample,Signal proc;
     class STFT,Power,MelFilter,LogPower,CropPad dsp;

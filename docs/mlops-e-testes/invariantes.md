@@ -22,7 +22,9 @@ Se o mesmo artista estiver presente tanto no conjunto de treino quanto no de tes
 Para todo particionamento gerado pelo Youfy:
 
 $$\text{artistas}(\text{train}) \cap \text{artistas}(\text{val}) = \emptyset$$
+
 $$\text{artistas}(\text{train}) \cap \text{artistas}(\text{test}) = \emptyset$$
+
 $$\text{artistas}(\text{val}) \cap \text{artistas}(\text{test}) = \emptyset$$
 
 ```mermaid
@@ -45,10 +47,10 @@ flowchart TD
     Val <-.->|"Disjunção: Interseção Vazia"| Test
     Train <-.->|"Disjunção: Interseção Vazia"| Test
 
-    classDef catalog fill:#18181b,stroke:#a855f7,stroke-width:1.5px,color:#f4f4f5;
-    classDef train fill:#18181b,stroke:#3b82f6,stroke-width:1.5px,color:#60a5fa;
-    classDef val fill:#18181b,stroke:#10b981,stroke-width:1.5px,color:#34d399;
-    classDef test fill:#18181b,stroke:#f59e0b,stroke-width:1.5px,color:#fbbf24;
+    classDef catalog stroke:#8b5cf6,stroke-width:2px;
+    classDef train stroke:#3b82f6,stroke-width:2px;
+    classDef val stroke:#10b981,stroke-width:2px;
+    classDef test stroke:#f59e0b,stroke-width:2px;
     class Catalog,Art catalog;
     class Train train;
     class Val val;
@@ -77,9 +79,9 @@ flowchart TD
     CheckGenre -- Não --> AssertCheck["Verificar Invariante Matemático (assert sets disjuntos)"]
     AssertCheck --> Export["Exportar train.parquet, val.parquet, test.parquet"]
 
-    classDef proc fill:#18181b,stroke:#3b82f6,stroke-width:1.5px,color:#f4f4f5;
-    classDef cond fill:#27272a,stroke:#a855f7,stroke-width:1.5px,color:#f4f4f5;
-    classDef out fill:#09090b,stroke:#10b981,stroke-width:2px,color:#34d399;
+    classDef proc stroke:#3b82f6,stroke-width:2px;
+    classDef cond stroke:#8b5cf6,stroke-width:2px;
+    classDef out stroke:#10b981,stroke-width:2px;
     class Start,Group,Quotas,SortArtists,CalcDeficit,Assign,AssertCheck proc;
     class LoopGenre,LoopArtist,CheckArtist,CheckGenre cond;
     class Export out;

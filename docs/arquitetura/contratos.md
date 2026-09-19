@@ -17,8 +17,8 @@ flowchart TD
     
     FP --> DirS["data/splits/{fingerprint}/<br/>- train.json<br/>- val.json<br/>- test.json"]
 
-    classDef fpStyle fill:#431407,stroke:#ff5500,stroke-width:1.5px,color:#fed7aa;
-    classDef dirStyle fill:#18181b,stroke:#27272a,stroke-width:1.5px,color:#ededed;
+    classDef fpStyle stroke:#f97316,stroke-width:2px;
+    classDef dirStyle stroke:#71717a,stroke-width:2px;
     class FP fpStyle;
     class DirF,DirS dirStyle;
 ```
@@ -65,7 +65,7 @@ sequenceDiagram
     User->>Player: Inicia reprodução (play_start)
     Player->>Buffer: Grava evento com event_id (UUID) e ts (relógio do cliente)
     
-    rect rgb(20, 20, 24)
+    rect rgba(128, 128, 128, 0.08)
         Note over Player,API: Se API estiver fora, reprodução segue sem interrupção
         Player--xAPI: POST /events (Falha de conexão)
         Player->>Buffer: Mantém evento no buffer local

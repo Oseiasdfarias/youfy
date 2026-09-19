@@ -65,8 +65,8 @@ flowchart TD
     Remote --> NpyBlobs
     Remote --> SplitBlobs
 
-    classDef git fill:#18181b,stroke:#f97316,stroke-width:1.5px,color:#fed7aa;
-    classDef dvc fill:#18181b,stroke:#06b6d4,stroke-width:1.5px,color:#a5f3fc;
+    classDef git stroke:#f97316,stroke-width:2px;
+    classDef dvc stroke:#06b6d4,stroke-width:2px;
     class GitRepo,Code,Commit,Pointers git;
     class DVCStorage,Remote,NpyBlobs,SplitBlobs dvc;
 ```

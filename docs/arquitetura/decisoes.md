@@ -26,8 +26,8 @@ flowchart TD
         FMA5["Dataset local, 100% offline, sem custos ou rede"]
     end
 
-    classDef ytStyle fill:#1c1012,stroke:#ef4444,stroke-width:1.5px,color:#fca5a5;
-    classDef fmaStyle fill:#0f1715,stroke:#22c55e,stroke-width:1.5px,color:#86efac;
+    classDef ytStyle stroke:#ef4444,stroke-width:2px;
+    classDef fmaStyle stroke:#10b981,stroke-width:2px;
     class S_YT,YT1,YT2,YT3,YT4,YT5 ytStyle;
     class S_FMA,FMA1,FMA2,FMA3,FMA4,FMA5 fmaStyle;
 ```
@@ -60,8 +60,8 @@ flowchart TD
 
     Events -->|Segregação Estrita| Eval["Avaliação e Benchmark Honestos"]
 
-    classDef simStyle fill:#18181b,stroke:#3b82f6,color:#93c5fd;
-    classDef humanStyle fill:#18181b,stroke:#22c55e,color:#86efac;
+    classDef simStyle stroke:#3b82f6,stroke-width:2px;
+    classDef humanStyle stroke:#10b981,stroke-width:2px;
     class Sim,Batch simStyle;
     class User,RealEvent humanStyle;
 ```
@@ -87,8 +87,8 @@ flowchart TD
     Penult --> Head["Classificador Linear (8 Classes)"]
     Head --> Pred["Probabilidades de Gênero (Softmax)"]
 
-    classDef penultStyle fill:#2e1065,stroke:#a855f7,stroke-width:1.5px,color:#e9d5ff;
-    classDef predStyle fill:#431407,stroke:#ff5500,stroke-width:1.5px,color:#fed7aa;
+    classDef penultStyle stroke:#8b5cf6,stroke-width:2px;
+    classDef predStyle stroke:#f97316,stroke-width:2px;
     class Penult penultStyle;
     class Pred predStyle;
 ```
@@ -114,9 +114,9 @@ flowchart TD
     S_FH -. "evitar" .-> S_MP
     S_MP -. "evitar" .-> S_YF
 
-    classDef fhStyle fill:#18181b,stroke:#ef4444,stroke-width:1.5px,color:#fca5a5;
-    classDef mpStyle fill:#18181b,stroke:#f59e0b,stroke-width:1.5px,color:#fde68a;
-    classDef yfStyle fill:#09090b,stroke:#22c55e,stroke-width:2px,color:#f4f4f5;
+    classDef fhStyle stroke:#ef4444,stroke-width:2px;
+    classDef mpStyle stroke:#f59e0b,stroke-width:2px;
+    classDef yfStyle stroke:#10b981,stroke-width:2px;
     class S_FH,FH1,FH2,FH3 fhStyle;
     class S_MP,MP1,MP2,MP3 mpStyle;
     class S_YF,Y1,Y2,Y3 yfStyle;

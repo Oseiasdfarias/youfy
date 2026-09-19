@@ -73,9 +73,9 @@ flowchart TD
         Greedy --> Parquet[("Partições Parquet:<br/>train.parquet (80%)<br/>val.parquet (10%)<br/>test.parquet (10%)")]
     end
 
-    classDef stage fill:#18181b,stroke:#3b82f6,stroke-width:1.5px,color:#f4f4f5;
-    classDef storage fill:#09090b,stroke:#10b981,stroke-width:1.5px,color:#34d399;
-    classDef cli fill:#27272a,stroke:#a855f7,stroke-width:1.5px,color:#e4e4e7;
+    classDef stage stroke:#3b82f6,stroke-width:2px;
+    classDef storage stroke:#10b981,stroke-width:2px;
+    classDef cli stroke:#8b5cf6,stroke-width:2px;
     class S1,S2,S3 stage;
     class DB,Quarantine,NpyStore,DBFeat,Parquet storage;
     class CLI1,CLI2,CLI3 cli;

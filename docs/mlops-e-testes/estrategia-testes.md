@@ -55,10 +55,10 @@ flowchart TD
     L3 --> L2
     L2 --> L1
 
-    classDef l1 fill:#18181b,stroke:#10b981,stroke-width:1.5px,color:#34d399;
-    classDef l2 fill:#18181b,stroke:#3b82f6,stroke-width:1.5px,color:#60a5fa;
-    classDef l3 fill:#18181b,stroke:#a855f7,stroke-width:1.5px,color:#c084fc;
-    classDef l4 fill:#18181b,stroke:#f59e0b,stroke-width:1.5px,color:#fbbf24;
+    classDef l1 stroke:#10b981,stroke-width:2px;
+    classDef l2 stroke:#3b82f6,stroke-width:2px;
+    classDef l3 stroke:#8b5cf6,stroke-width:2px;
+    classDef l4 stroke:#f59e0b,stroke-width:2px;
     class L1 l1;
     class L2 l2;
     class L3 l3;
