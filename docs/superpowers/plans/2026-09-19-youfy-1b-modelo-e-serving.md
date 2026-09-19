@@ -333,7 +333,7 @@ git commit -m "feat(ml): contrato do artefato de modelo e mlflow local no compos
 
 O dataset **não** consulta banco: recebe os rótulos prontos. É o que mantém `ml` treinável a partir de um diretório de arrays.
 
-- [ ] **Step 1: Escrever o gerador sintético e os testes que falham**
+- [x] **Step 1: Escrever o gerador sintético e os testes que falham**
 
 ```python
 # packages/ml/src/youfy_ml/testing.py
@@ -446,12 +446,12 @@ def test_leitura_e_deterministica(tmp_path):
     assert np.array_equal(a.numpy(), b.numpy())
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/ml/tests/test_dataset.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_ml.dataset'`
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 ```python
 # packages/ml/src/youfy_ml/dataset.py
@@ -505,12 +505,12 @@ class MelspecDataset(Dataset):
         return torch.from_numpy(arr)[None, :, :], self._indice[amostra.label]
 ```
 
-- [ ] **Step 4: Rodar os testes e confirmar que passam**
+- [x] **Step 4: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/ml/tests -v`
 Expected: PASS nos 12 testes (6 de artifact + 6 de dataset)
 
-- [ ] **Step 5: Commitar**
+- [x] **Step 5: Commitar**
 
 ```bash
 git add packages/ml
