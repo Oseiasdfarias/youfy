@@ -1,3 +1,5 @@
+from collections import Counter
+
 from hypothesis import given, settings
 from hypothesis import strategies as st
 from youfy_pipelines.split import TrackRef, make_splits
@@ -46,6 +48,31 @@ def test_proporcoes_ficam_perto_do_alvo_com_artistas_suficientes():
     total = len(refs)
     assert abs(len(s.train) / total - 0.70) < 0.10
     assert abs(len(s.test) / total - 0.15) < 0.10
+
+
+def test_estratificacao_por_genero_e_preservada_em_cada_split():
+    """Disjuncao de artista sem estratificacao ainda envenena a metrica: um
+    split que perde um genero inteiro passa a medir outra coisa."""
+    catalogo = {}
+    for genero, n_artistas in (("Rock", 60), ("Jazz", 20), ("Folk", 8)):
+        for a in range(n_artistas):
+            catalogo[f"{genero}-a{a}"] = (genero, 3)
+    refs = _refs(catalogo)
+    s = make_splits(refs, seed=42)
+
+    genero_de = {r.track_id: r.genre for r in refs}
+    distribuicao_global = Counter(r.genre for r in refs)
+
+    for nome, ids in s.as_dict().items():
+        assert ids, f"split {nome} ficou vazio"
+        local = Counter(genero_de[i] for i in ids)
+        for genero, n_global in distribuicao_global.items():
+            assert local[genero] > 0, f"genero {genero} ausente do split {nome}"
+            esperado = n_global / len(refs)
+            obtido = local[genero] / len(ids)
+            assert abs(obtido - esperado) < 0.05, (
+                f"{genero} em {nome}: {obtido:.1%} contra {esperado:.1%} global"
+            )
 
 
 @settings(max_examples=50, deadline=None)

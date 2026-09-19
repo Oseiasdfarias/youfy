@@ -68,12 +68,14 @@ def test_pipeline_e_retomavel_a_partir_de_qualquer_estagio(session, tmp_path):
 
     run_ingest(session, dump_dir=tmp_path, subset="small", audio_ext=".wav")
     session.flush()
-    run_featurize(session, data_dir=data_dir, spec=spec)
+    primeira_feat = run_featurize(session, data_dir=data_dir, spec=spec)
     session.flush()
+    assert primeira_feat.computed > 0
 
     # Reexecutar tudo não deve refazer trabalho nem mudar o resultado.
     segunda_feat = run_featurize(session, data_dir=data_dir, spec=spec)
     assert segunda_feat.computed == 0
+    assert segunda_feat.skipped == primeira_feat.computed
     a = run_split(session, data_dir=data_dir, spec=spec, seed=42).as_dict()
     b = run_split(session, data_dir=data_dir, spec=spec, seed=42).as_dict()
     assert a == b

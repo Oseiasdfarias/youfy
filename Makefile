@@ -1,4 +1,4 @@
-.PHONY: setup up down lint test ingest featurize split e2e dvc-push docs-build docs-serve
+.PHONY: setup up down lint test migrate migrate-check ingest featurize split e2e dvc-push docs-build docs-serve
 
 setup:
 	uv sync --all-extras
@@ -8,6 +8,12 @@ up:
 
 down:
 	docker compose down
+
+migrate:
+	cd packages/catalog && uv run alembic upgrade head
+
+migrate-check:
+	cd packages/catalog && uv run alembic upgrade head && uv run alembic check
 
 lint:
 	uv run ruff check .
