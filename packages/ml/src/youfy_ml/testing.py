@@ -31,8 +31,8 @@ def escrever_features(
     verdadeiros: list[int] = []
 
     largura = max(1, n_mels // n_classes)
-    for k in range(n_classes):
-        for i in range(por_classe):
+    for i in range(por_classe):
+        for k in range(n_classes):
             arr = rng.normal(0.0, 1.0, size=(n_mels, n_frames)).astype(np.float32)
             inicio = k * largura
             arr[inicio : inicio + largura, :] += 8.0      # a banda que identifica a classe

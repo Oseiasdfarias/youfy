@@ -732,7 +732,7 @@ git commit -m "feat(ml): cnn de genero independente de shape e semeadura determi
 antes de seguir. Ajustar `batch_size` é trivial; descobrir na Task 9 que não cabe,
 não é.
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/ml/tests/test_train.py
@@ -822,12 +822,12 @@ def test_num_workers_maior_que_zero_e_recusado_com_determinismo(tmp_path):
         )
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/ml/tests/test_train.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_ml.train'`
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 ```python
 # packages/ml/src/youfy_ml/train.py
@@ -938,12 +938,12 @@ def _passo(modelo, loader, criterio, otimizador) -> tuple[float, float]:
     return soma_perda / total, acertos / total
 ```
 
-- [ ] **Step 4: Rodar os testes e confirmar que passam**
+- [x] **Step 4: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/ml/tests/test_train.py -v --durations=5`
 Expected: PASS nos 6 testes
 
-- [ ] **Step 5: Medir as premissas com a FeatureSpec real**
+- [x] **Step 5: Medir as premissas com a FeatureSpec real**
 
 ```bash
 uv run python - <<'EOF'
@@ -959,7 +959,7 @@ EOF
 Anote os dois números no commit. Se o forward passar de poucos segundos, ajuste
 `batch_size` ou `n_frames` **agora**, antes da Task 9.
 
-- [ ] **Step 6: Commitar**
+- [x] **Step 6: Commitar**
 
 ```bash
 git add packages/ml
