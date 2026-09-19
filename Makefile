@@ -1,4 +1,4 @@
-.PHONY: setup up down lint test migrate migrate-check ingest featurize split e2e dvc-push docs-build docs-serve
+.PHONY: setup up down lint test migrate migrate-check ingest featurize split e2e dvc-push docs-build docs-serve mlflow-db mlflow-up
 
 setup:
 	uv sync --all-extras
@@ -42,3 +42,10 @@ docs-build:
 docs-serve:
 	uv run mkdocs serve
 
+mlflow-db:
+	docker compose exec -T postgres psql -U youfy -d postgres -tc \
+	  "SELECT 1 FROM pg_database WHERE datname='mlflow'" | grep -q 1 || \
+	  docker compose exec -T postgres psql -U youfy -d postgres -c "CREATE DATABASE mlflow"
+
+mlflow-up: mlflow-db
+	docker compose up -d --wait mlflow

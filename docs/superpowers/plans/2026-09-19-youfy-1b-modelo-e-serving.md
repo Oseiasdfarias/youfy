@@ -67,7 +67,7 @@ Valem todas as do plano 1A, mais:
   - `GenreClassifier` — Protocol com `feature_spec: FeatureSpec`, `classes: list[str]`, `predict(melspec: np.ndarray) -> np.ndarray`.
   - `TorchGenreClassifier(module, feature_spec, classes)` implementando o Protocol, com `save(dir: Path) -> None` e `load(dir: Path) -> TorchGenreClassifier` (classmethod).
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/ml/tests/test_artifact.py
@@ -133,12 +133,12 @@ def test_predict_rejeita_shape_incompativel_com_a_spec():
         clf.predict(np.zeros((32, 20), dtype=np.float32))
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/ml/tests/test_artifact.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_ml'`
 
-- [ ] **Step 3: Criar o pacote `ml` no workspace**
+- [x] **Step 3: Criar o pacote `ml` no workspace**
 
 ```toml
 # packages/ml/pyproject.toml
@@ -164,7 +164,7 @@ build-backend = "hatchling.build"
 
 Acrescente `youfy-ml` em `dependencies` e em `[tool.uv.sources]` do `pyproject.toml` da raiz, no mesmo formato dos outros três.
 
-- [ ] **Step 4: Implementar o contrato do artefato**
+- [x] **Step 4: Implementar o contrato do artefato**
 
 ```python
 # packages/ml/src/youfy_ml/artifact.py
@@ -240,12 +240,12 @@ class TorchGenreClassifier:
         )
 ```
 
-- [ ] **Step 5: Rodar os testes e confirmar que passam**
+- [x] **Step 5: Rodar os testes e confirmar que passam**
 
 Run: `uv sync --all-extras && uv run pytest packages/ml/tests/test_artifact.py -v`
 Expected: PASS nos 6 testes
 
-- [ ] **Step 6: Subir o MLflow no compose**
+- [x] **Step 6: Subir o MLflow no compose**
 
 O MLflow precisa de um banco próprio: misturá-lo ao `youfy` faria o `alembic check`
 do CI ver as tabelas do MLflow como remoções pendentes e quebrar.
@@ -304,7 +304,7 @@ YOUFY_MLFLOW_TRACKING_URI=http://localhost:5000
 YOUFY_MODEL_NAME=youfy-genre-clf
 ```
 
-- [ ] **Step 7: Verificar e commitar**
+- [x] **Step 7: Verificar e commitar**
 
 Run: `make up && make mlflow-up && curl -sf http://localhost:5000/health && make lint && make test`
 Expected: MLflow responde `OK`; lint limpo; toda a suíte anterior ainda verde
