@@ -87,18 +87,23 @@
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
+  function getIsLight() {
+    return document.body.getAttribute('data-md-color-scheme') === 'default' || 
+           document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+  }
+
   function drawHeroWaves() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const w = canvas.width;
     const h = canvas.height;
     const midY = h * 0.68;
 
-    const isLight = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+    const isLight = getIsLight();
 
-    // Draw secondary subtle wave (ambient noise)
+    // Draw secondary subtle wave (ambient noise) with crisp contrast
     ctx.beginPath();
-    ctx.lineWidth = 1.2;
-    ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = isLight ? 1.5 : 1.2;
+    ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.22)' : 'rgba(255, 255, 255, 0.12)';
     for (let x = 0; x < w; x += 3) {
       const y = midY + Math.sin(x * 0.015 + phase * 0.7) * 16 + Math.sin(x * 0.03 - phase * 0.4) * 8;
       if (x === 0) ctx.moveTo(x, y);
@@ -108,13 +113,13 @@
 
     // Draw primary acoustic sine wave
     ctx.beginPath();
-    ctx.lineWidth = 2;
+    ctx.lineWidth = isLight ? 2.5 : 2;
     const grad = ctx.createLinearGradient(0, 0, w, 0);
     if (isLight) {
-      grad.addColorStop(0, 'rgba(0, 0, 0, 0.1)');
-      grad.addColorStop(0.5, 'rgba(0, 0, 0, 0.7)');
-      grad.addColorStop(0.85, 'rgba(255, 85, 0, 0.9)');
-      grad.addColorStop(1, 'rgba(255, 85, 0, 0.3)');
+      grad.addColorStop(0, 'rgba(15, 23, 42, 0.25)');
+      grad.addColorStop(0.5, 'rgba(15, 23, 42, 0.85)');
+      grad.addColorStop(0.85, 'rgba(255, 85, 0, 1.0)');
+      grad.addColorStop(1, 'rgba(255, 85, 0, 0.4)');
     } else {
       grad.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
       grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.65)');
@@ -255,7 +260,12 @@ function drawPlayerIdle() {
     0.45, 0.28, 0.36, 0.20, 0.30, 0.45, 0.25, 0.18
   ];
 
-  const isLight = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+  function getPlayerIsLight() {
+    return document.body.getAttribute('data-md-color-scheme') === 'default' || 
+           document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+  }
+
+  const isLight = getPlayerIsLight();
 
   for (let i = 0; i < numBars; i++) {
     const bh = Math.max(4, mockHeights[i % mockHeights.length] * (h - 10));
@@ -263,14 +273,14 @@ function drawPlayerIdle() {
     const y = h - bh;
 
     if (i < currentIdx) {
-      pCtx.fillStyle = isLight ? 'rgba(0, 0, 0, 0.85)' : 'rgba(255, 255, 255, 0.85)';
+      pCtx.fillStyle = isLight ? '#0f172a' : 'rgba(255, 255, 255, 0.85)';
       pCtx.shadowBlur = 0;
     } else if (i === currentIdx) {
       pCtx.fillStyle = '#ff5500';
       pCtx.shadowColor = '#ff5500';
       pCtx.shadowBlur = 8;
     } else {
-      pCtx.fillStyle = isLight ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.2)';
+      pCtx.fillStyle = isLight ? 'rgba(15, 23, 42, 0.28)' : 'rgba(255, 255, 255, 0.2)';
       pCtx.shadowBlur = 0;
     }
 
@@ -299,15 +309,17 @@ function startSynth() {
       analyser.smoothingTimeConstant = 0.75;
 
       masterGain = audioCtx.createGain();
-      masterGain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      masterGain.connect(analyser);
-      analyser.connect(audioCtx.destination);
+      masterGain.gain.setValueAtTime(0.22, audioCtx.currentTime);
+      analyser.connect(masterGain);
+      masterGain.connect(audioCtx.destination);
     }
 
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
 
     isPlaying = true;
-    document.getElementById('player-play-icon').textContent = '❚❚';
+    document.getElementById('player-play-icon').textContent = '⏸';
     const textEl = document.getElementById('player-play-text');
     if (textEl) textEl.textContent = 'Pausar Áudio';
 
@@ -371,7 +383,8 @@ function startSynth() {
       const h = pCanvas.height;
       pCtx.clearRect(0, 0, w, h);
 
-      const isLightMode = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+      const isLightMode = document.body.getAttribute('data-md-color-scheme') === 'default' || 
+                          document.documentElement.getAttribute('data-md-color-scheme') === 'default';
       const barGap = 3;
       const barWidth = Math.max(3, (w - (bufferLength - 1) * barGap) / bufferLength);
       const progressIdx = Math.floor((currentSeconds / totalSeconds) * bufferLength);
@@ -385,7 +398,7 @@ function startSynth() {
         const y = h - bh;
 
         if (i < progressIdx) {
-          pCtx.fillStyle = isLightMode ? 'rgba(0, 0, 0, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+          pCtx.fillStyle = isLightMode ? '#0f172a' : 'rgba(255, 255, 255, 0.95)';
           pCtx.shadowBlur = 0;
         } else if (i === progressIdx) {
           pCtx.fillStyle = '#ff5500';
@@ -393,8 +406,8 @@ function startSynth() {
           pCtx.shadowBlur = 12;
         } else {
           // Future unplayed bars pulse with softer ambient level
-          const softAlpha = 0.15 + (binValue / 255) * 0.35;
-          pCtx.fillStyle = isLightMode ? `rgba(0, 0, 0, ${softAlpha.toFixed(2)})` : `rgba(255, 255, 255, ${softAlpha.toFixed(2)})`;
+          const softAlpha = isLightMode ? (0.22 + (binValue / 255) * 0.45) : (0.15 + (binValue / 255) * 0.35);
+          pCtx.fillStyle = isLightMode ? `rgba(15, 23, 42, ${softAlpha.toFixed(2)})` : `rgba(255, 255, 255, ${softAlpha.toFixed(2)})`;
           pCtx.shadowBlur = 0;
         }
 
@@ -528,24 +541,37 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
     return nodes.find(n => n.id === id);
   }
 
+  function getArchIsLight() {
+    return document.body.getAttribute('data-md-color-scheme') === 'default' || 
+           document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+  }
+
   function drawNode(n) {
-    const isLight = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+    const isLight = getArchIsLight();
     
     // Card background
     ctx.fillStyle = isLight ? '#ffffff' : '#111116';
-    ctx.strokeStyle = n.color;
-    ctx.lineWidth = isLight ? 1.5 : 1.2;
+    ctx.strokeStyle = isLight ? n.color : n.color;
+    ctx.lineWidth = isLight ? 1.8 : 1.2;
     
     ctx.beginPath();
     ctx.roundRect(n.x - n.w / 2, n.y - n.h / 2, n.w, n.h, 8);
+    
+    if (isLight) {
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetY = 2;
+    } else {
+      ctx.shadowColor = n.color;
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetY = 0;
+    }
     ctx.fill();
     ctx.stroke();
 
-    // Subtle glow
-    ctx.shadowColor = n.color;
-    ctx.shadowBlur = isLight ? 4 : 8;
-    ctx.stroke();
-    ctx.shadowBlur = 0; // reset
+    // Reset shadow
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
 
     // Icon
     ctx.font = '14px sans-serif';
@@ -553,12 +579,12 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
     ctx.fillText(n.icon, n.x - n.w / 2 + 10, n.y - 4);
 
     // Label
-    ctx.fillStyle = isLight ? '#09090b' : '#ffffff';
+    ctx.fillStyle = isLight ? '#0f172a' : '#ffffff';
     ctx.font = '600 11.5px Inter, -apple-system, sans-serif';
     ctx.fillText(n.label, n.x - n.w / 2 + 32, n.y - 5);
 
     // Subtitle
-    ctx.fillStyle = isLight ? '#64748b' : '#9ca3af';
+    ctx.fillStyle = isLight ? '#475569' : '#9ca3af';
     ctx.font = '9.5px Inter, -apple-system, sans-serif';
     ctx.fillText(n.sub, n.x - n.w / 2 + 10, n.y + 14);
   }
@@ -568,9 +594,9 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
     const toNode = getNode(link.to);
     if (!fromNode || !toNode) return;
 
-    const isLight = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
-    ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.12)';
-    ctx.lineWidth = 1.5;
+    const isLight = getArchIsLight();
+    ctx.strokeStyle = isLight ? 'rgba(71, 85, 105, 0.35)' : 'rgba(255, 255, 255, 0.12)';
+    ctx.lineWidth = isLight ? 1.8 : 1.5;
     ctx.beginPath();
 
     if (link.loop) {
@@ -620,14 +646,14 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
   function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const isLight = document.documentElement.getAttribute('data-md-color-scheme') === 'default';
+    const isLight = getArchIsLight();
 
-    // Draw grid background subtle dots
-    ctx.fillStyle = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.04)';
+    // Draw grid background subtle dots with crisp visibility in light mode
+    ctx.fillStyle = isLight ? 'rgba(71, 85, 105, 0.18)' : 'rgba(255, 255, 255, 0.04)';
     for (let x = 20; x < canvas.width; x += 30) {
       for (let y = 20; y < canvas.height; y += 30) {
         ctx.beginPath();
-        ctx.arc(x, y, 1, 0, Math.PI * 2);
+        ctx.arc(x, y, 1.2, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -658,7 +684,7 @@ O Youfy implementa um ciclo de dados unidirecional e rigoroso:
 
     // Draw Stage markers
     ctx.font = '600 10px var(--md-font-code, monospace)';
-    ctx.fillStyle = isLight ? '#64748b' : '#6b7280';
+    ctx.fillStyle = isLight ? '#334155' : '#6b7280';
     ctx.fillText('ESTÁGIO 1: ENGENHARIA DE DADOS & ACÚSTICA', 50, 30);
     ctx.fillText('ESTÁGIO 2: MLOPS, PARTIÇÃO & TREINO PYTORCH', 440, 160);
     ctx.fillText('ESTÁGIO 3: SERVING, PLAYER REAL & CLOSED-LOOP RETRAINING', 50, 300);
