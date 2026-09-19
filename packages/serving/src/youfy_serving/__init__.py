@@ -1,0 +1,1 @@
+"""Serving do modelo Youfy."""

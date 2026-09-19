@@ -20,6 +20,7 @@ members = [
     "youfy-catalog",
     "youfy-ml",
     "youfy-pipelines",
+    "youfy-serving",
 ]
 
 [[package]]
@@ -5169,6 +5170,7 @@ dependencies = [
     { name = "youfy-catalog" },
     { name = "youfy-ml" },
     { name = "youfy-pipelines" },
+    { name = "youfy-serving" },
 ]
 
 [package.optional-dependencies]
@@ -5193,6 +5195,7 @@ requires-dist = [
     { name = "youfy-catalog", editable = "packages/catalog" },
     { name = "youfy-ml", editable = "packages/ml" },
     { name = "youfy-pipelines", editable = "pipelines" },
+    { name = "youfy-serving", editable = "packages/serving" },
 ]
 provides-extras = ["dev"]
 
@@ -5278,6 +5281,26 @@ requires-dist = [
     { name = "typer", specifier = ">=0.12" },
     { name = "youfy-audio", editable = "packages/audio" },
     { name = "youfy-catalog", editable = "packages/catalog" },
+]
+
+[[package]]
+name = "youfy-serving"
+version = "0.1.0"
+source = { editable = "packages/serving" }
+dependencies = [
+    { name = "mlflow" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "youfy-audio" },
+    { name = "youfy-ml" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "mlflow", specifier = ">=2.13" },
+    { name = "numpy", specifier = ">=1.26" },
+    { name = "youfy-audio", editable = "packages/audio" },
+    { name = "youfy-ml", editable = "packages/ml" },
 ]
 
 [[package]]

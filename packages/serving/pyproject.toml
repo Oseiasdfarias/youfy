@@ -1,0 +1,13 @@
+[project]
+name = "youfy-serving"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["youfy-audio", "youfy-ml", "numpy>=1.26", "mlflow>=2.13"]
+
+[tool.uv.sources]
+youfy-audio = { workspace = true }
+youfy-ml = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

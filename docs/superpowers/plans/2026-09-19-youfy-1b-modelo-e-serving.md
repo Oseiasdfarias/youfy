@@ -980,7 +980,7 @@ git commit -m "feat(ml): loop de treino deterministico com testes de reprodutibi
   - `Metrics(macro_f1: float, accuracy: float, per_class_f1: dict[str, float], confusion: list[list[int]])` — dataclass congelada, com `as_flat_dict() -> dict[str, float]` para o MLflow.
   - `evaluate(classifier, *, samples, features_dir) -> Metrics`
 
-- [x] **Step 1: Escrever os testes que falham**
+- [ ] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/ml/tests/test_evaluate.py
@@ -1038,12 +1038,12 @@ def test_rotulos_embaralhados_ficam_na_faixa_do_acaso(tmp_path):
     assert evaluate(r.classifier, samples=teste, features_dir=tmp_path).macro_f1 <= 0.20
 ```
 
-- [x] **Step 2: Rodar e confirmar que falham**
+- [ ] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/ml/tests/test_evaluate.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_ml.evaluate'`
 
-- [x] **Step 3: Implementar**
+- [ ] **Step 3: Implementar**
 
 ```python
 # packages/ml/src/youfy_ml/evaluate.py
@@ -1099,12 +1099,12 @@ def evaluate(
     )
 ```
 
-- [x] **Step 4: Rodar os testes e confirmar que passam**
+- [ ] **Step 4: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/ml/tests/test_evaluate.py -v --durations=5`
 Expected: PASS nos 4 testes
 
-- [x] **Step 5: Commitar**
+- [ ] **Step 5: Commitar**
 
 ```bash
 git add packages/ml
@@ -1128,7 +1128,7 @@ git commit -m "feat(ml): metricas de avaliacao e teste de rotulos embaralhados"
 Função pura, sem I/O. É o coração do gate da spec, e por ser pura dá para testá-la
 exaustivamente — inclusive nos limites, que é onde um gate mal escrito promove ruído.
 
-- [x] **Step 1: Escrever os testes que falham**
+- [ ] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/ml/tests/test_promotion.py
@@ -1196,12 +1196,12 @@ def test_margem_e_piso_sao_configuraveis():
     assert should_promote(_m(0.50), None, floor=0.60).promote is False
 ```
 
-- [x] **Step 2: Rodar e confirmar que falham**
+- [ ] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/ml/tests/test_promotion.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_ml.promotion'`
 
-- [x] **Step 3: Implementar**
+- [ ] **Step 3: Implementar**
 
 ```python
 # packages/ml/src/youfy_ml/promotion.py
@@ -1262,12 +1262,12 @@ def should_promote(
     )
 ```
 
-- [x] **Step 4: Rodar os testes e confirmar que passam**
+- [ ] **Step 4: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/ml/tests/test_promotion.py -v`
 Expected: PASS nos 11 testes
 
-- [x] **Step 5: Commitar**
+- [ ] **Step 5: Commitar**
 
 ```bash
 git add packages/ml
@@ -1294,7 +1294,7 @@ git commit -m "feat(ml): gate de promocao codificado com margem contra ruido de 
 Os testes usam `sqlite:///<tmp>/mlflow.db`: o **file store do MLflow não suporta
 Model Registry**, então tracking em arquivo simples não serviria aqui.
 
-- [x] **Step 1: Escrever os testes que falham**
+- [ ] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/ml/tests/test_tracking.py
@@ -1389,12 +1389,12 @@ def test_promover_move_o_alias_para_a_nova_versao(tracking_uri, resultado):
     ).macro_f1 == pytest.approx(0.80)
 ```
 
-- [x] **Step 2: Rodar e confirmar que falham**
+- [ ] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/ml/tests/test_tracking.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_ml.tracking'`
 
-- [x] **Step 3: Implementar**
+- [ ] **Step 3: Implementar**
 
 ```python
 # packages/ml/src/youfy_ml/tracking.py
@@ -1484,12 +1484,12 @@ def load_champion_metrics(*, tracking_uri: str, model_name: str) -> Metrics | No
     return Metrics(**json.loads(Path(local).read_text()))
 ```
 
-- [x] **Step 4: Rodar os testes e confirmar que passam**
+- [ ] **Step 4: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/ml/tests/test_tracking.py -v`
 Expected: PASS nos 5 testes
 
-- [x] **Step 5: Commitar**
+- [ ] **Step 5: Commitar**
 
 ```bash
 git add packages/ml
@@ -1520,7 +1520,7 @@ git commit -m "feat(ml): tracking no mlflow e registro por alias de producao"
 Este é o critério 9 da spec. A validação acontece **na carga**, não na predição:
 falha ruidosa na inicialização, nunca degradação silenciosa em produção.
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/serving/tests/conftest.py
@@ -1646,12 +1646,12 @@ def test_melspec_com_shape_errado_e_recusado(preditor):
         preditor.predict(np.zeros((32, 20), dtype=np.float32))
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/serving/tests -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_serving'`
 
-- [ ] **Step 3: Criar o pacote**
+- [x] **Step 3: Criar o pacote**
 
 ```toml
 # packages/serving/pyproject.toml
@@ -1672,7 +1672,7 @@ build-backend = "hatchling.build"
 
 Acrescente `youfy-serving` ao `pyproject.toml` da raiz, como os demais.
 
-- [ ] **Step 4: Implementar o loader**
+- [x] **Step 4: Implementar o loader**
 
 ```python
 # packages/serving/src/youfy_serving/errors.py
@@ -1740,7 +1740,7 @@ def load_production(
     return LoadedModel(classifier=classificador, model_version=versao.version)
 ```
 
-- [ ] **Step 5: Implementar o preditor**
+- [x] **Step 5: Implementar o preditor**
 
 ```python
 # packages/serving/src/youfy_serving/predictor.py
@@ -1779,12 +1779,12 @@ class Predictor:
         )
 ```
 
-- [ ] **Step 6: Rodar os testes e confirmar que passam**
+- [x] **Step 6: Rodar os testes e confirmar que passam**
 
 Run: `uv sync --all-extras && uv run pytest packages/serving/tests -v`
 Expected: PASS nos 8 testes
 
-- [ ] **Step 7: Commitar**
+- [x] **Step 7: Commitar**
 
 ```bash
 git add packages/serving pyproject.toml uv.lock

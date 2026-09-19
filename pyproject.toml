@@ -8,6 +8,7 @@ dependencies = [
     "youfy-catalog",
     "youfy-ml",
     "youfy-pipelines",
+    "youfy-serving",
 ]
 
 [project.optional-dependencies]
@@ -21,6 +22,7 @@ youfy-audio = { workspace = true }
 youfy-catalog = { workspace = true }
 youfy-ml = { workspace = true }
 youfy-pipelines = { workspace = true }
+youfy-serving = { workspace = true }
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "packages/*/tests", "pipelines/tests"]
