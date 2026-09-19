@@ -225,17 +225,151 @@ body {
   color: var(--md-default-fg-color) !important;
 }
 
-/* Sidebar Navigation */
-.md-nav__link {
-  font-size: 0.85rem;
-  border-radius: 6px;
-  padding: 4px 8px;
-  transition: all 0.15s ease;
+/* -------------------------------------------------------------
+ * Modern App-Style Sidebar Navigation (Vercel / Linear Style)
+ * ------------------------------------------------------------- */
+
+/* Sidebar Container & Scrolling */
+.md-sidebar {
+  width: 14.5rem;
 }
 
-.md-nav__link--active {
-  font-weight: 600;
+.md-sidebar__inner {
+  padding: 0.75rem 0.5rem 2rem;
+}
+
+/* Category / Group Title in Sidebar (Nested Groups) */
+.md-nav__item--nested > .md-nav__link,
+.md-nav__item--section > .md-nav__link {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: var(--md-default-fg-color--lighter) !important;
+  padding: 0.75rem 0.75rem 0.35rem !important;
+  margin-top: 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.md-nav__item--nested > .md-nav__link:hover,
+.md-nav__item--section > .md-nav__link:hover {
+  background: transparent !important;
   color: var(--md-default-fg-color) !important;
+}
+
+/* Subtle separator between major sections */
+.md-nav--primary > .md-nav__list > .md-nav__item--nested {
+  margin-bottom: 0.5rem;
+}
+
+.md-nav--primary > .md-nav__list > .md-nav__item--nested + .md-nav__item--nested {
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--vercel-border-color);
+}
+
+/* General Menu Link */
+.md-nav__link {
+  display: flex !important;
+  align-items: center;
+  font-size: 0.82rem !important;
+  font-weight: 450;
+  line-height: 1.4;
+  color: var(--md-default-fg-color--light) !important;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem !important;
+  margin: 0.1rem 0;
+  border: 1px solid transparent;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hover State */
+.md-nav__link:hover {
+  color: var(--md-default-fg-color) !important;
+  background-color: var(--vercel-card-bg) !important;
+  border-color: var(--vercel-border-color) !important;
+}
+
+/* Active Page in Sidebar */
+.md-nav__link--active {
+  font-weight: 600 !important;
+  color: var(--md-default-fg-color) !important;
+  background-color: var(--vercel-card-bg) !important;
+  border-color: var(--vercel-border-color) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+/* Indicator accent bar for active item */
+.md-nav__link--active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background-color: var(--md-default-fg-color);
+}
+
+/* Dark mode specific tweak for active indicator */
+[data-md-color-scheme="slate"] .md-nav__link--active::before {
+  background-color: #ffffff;
+}
+
+[data-md-color-scheme="default"] .md-nav__link--active::before {
+  background-color: #09090b;
+}
+
+/* Nested lists (submenus) indent with subtle guide line */
+.md-nav__list .md-nav__list {
+  padding-left: 0.5rem;
+  margin-left: 0.5rem;
+  border-left: 1px solid var(--vercel-border-color);
+}
+
+/* Secondary Sidebar (Table of Contents - Neste Artigo / Nesta Página) */
+.md-sidebar--secondary {
+  width: 14.5rem;
+}
+
+.md-nav--secondary {
+  border-left: 1px solid var(--vercel-border-color);
+  padding-left: 0.75rem;
+}
+
+.md-nav--secondary .md-nav__title {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: var(--md-default-fg-color--lighter) !important;
+  padding: 0.4rem 0 !important;
+  margin-bottom: 0.4rem;
+}
+
+.md-nav--secondary .md-nav__link {
+  font-size: 0.78rem !important;
+  padding: 0.25rem 0.5rem !important;
+  color: var(--md-default-fg-color--light) !important;
+  border-radius: 4px;
+}
+
+.md-nav--secondary .md-nav__link:hover {
+  color: var(--md-default-fg-color) !important;
+  background-color: var(--vercel-card-bg) !important;
+}
+
+.md-nav--secondary .md-nav__link--active {
+  font-weight: 600 !important;
+  color: var(--md-default-fg-color) !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.md-nav--secondary .md-nav__link--active::before {
+  display: none !important;
 }
 
 /* Code Blocks */
