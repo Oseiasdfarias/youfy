@@ -980,7 +980,7 @@ git commit -m "feat(ml): loop de treino deterministico com testes de reprodutibi
   - `Metrics(macro_f1: float, accuracy: float, per_class_f1: dict[str, float], confusion: list[list[int]])` — dataclass congelada, com `as_flat_dict() -> dict[str, float]` para o MLflow.
   - `evaluate(classifier, *, samples, features_dir) -> Metrics`
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/ml/tests/test_evaluate.py
@@ -1038,12 +1038,12 @@ def test_rotulos_embaralhados_ficam_na_faixa_do_acaso(tmp_path):
     assert evaluate(r.classifier, samples=teste, features_dir=tmp_path).macro_f1 <= 0.20
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/ml/tests/test_evaluate.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_ml.evaluate'`
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 ```python
 # packages/ml/src/youfy_ml/evaluate.py
@@ -1099,12 +1099,12 @@ def evaluate(
     )
 ```
 
-- [ ] **Step 4: Rodar os testes e confirmar que passam**
+- [x] **Step 4: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/ml/tests/test_evaluate.py -v --durations=5`
 Expected: PASS nos 4 testes
 
-- [ ] **Step 5: Commitar**
+- [x] **Step 5: Commitar**
 
 ```bash
 git add packages/ml
