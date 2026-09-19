@@ -11,3 +11,4 @@ data/*
 .bin/
 site/
 showcase/
+mlruns/
