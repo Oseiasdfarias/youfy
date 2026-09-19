@@ -26,8 +26,10 @@ flowchart TD
         FMA5["Dataset local, 100% offline, sem custos ou rede"]
     end
 
-    style S_YT fill:#1c1012,stroke:#ef4444,color:#fca5a5
-    style S_FMA fill:#0f1715,stroke:#22c55e,color:#86efac
+    classDef ytStyle fill:#1c1012,stroke:#ef4444,stroke-width:1.5px,color:#fca5a5;
+    classDef fmaStyle fill:#0f1715,stroke:#22c55e,stroke-width:1.5px,color:#86efac;
+    class S_YT,YT1,YT2,YT3,YT4,YT5 ytStyle;
+    class S_FMA,FMA1,FMA2,FMA3,FMA4,FMA5 fmaStyle;
 ```
 
 ### O que o Free Music Archive (FMA) viabiliza:
@@ -85,8 +87,10 @@ flowchart TD
     Penult --> Head["Classificador Linear (8 Classes)"]
     Head --> Pred["Probabilidades de Gênero (Softmax)"]
 
-    style Penult fill:#2e1065,stroke:#a855f7,color:#e9d5ff
-    style Pred fill:#431407,stroke:#ff5500,color:#fed7aa
+    classDef penultStyle fill:#2e1065,stroke:#a855f7,stroke-width:1.5px,color:#e9d5ff;
+    classDef predStyle fill:#431407,stroke:#ff5500,stroke-width:1.5px,color:#fed7aa;
+    class Penult penultStyle;
+    class Pred predStyle;
 ```
 
 ---
@@ -110,7 +114,10 @@ flowchart TD
     S_FH -. "evitar" .-> S_MP
     S_MP -. "evitar" .-> S_YF
 
-    style S_FH fill:#18181b,stroke:#ef4444,stroke-width:1.5px,color:#fca5a5
-    style S_MP fill:#18181b,stroke:#f59e0b,stroke-width:1.5px,color:#fde68a
-    style S_YF fill:#09090b,stroke:#22c55e,stroke-width:2px,color:#f4f4f5
+    classDef fhStyle fill:#18181b,stroke:#ef4444,stroke-width:1.5px,color:#fca5a5;
+    classDef mpStyle fill:#18181b,stroke:#f59e0b,stroke-width:1.5px,color:#fde68a;
+    classDef yfStyle fill:#09090b,stroke:#22c55e,stroke-width:2px,color:#f4f4f5;
+    class S_FH,FH1,FH2,FH3 fhStyle;
+    class S_MP,MP1,MP2,MP3 mpStyle;
+    class S_YF,Y1,Y2,Y3 yfStyle;
 ```

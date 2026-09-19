@@ -33,6 +33,34 @@
   --vercel-border-color: #eaeaea;
   --vercel-card-bg: #fafafa;
   --vercel-header-border: #eaeaea;
+
+  /* Native Material-for-MkDocs Mermaid Variables for Light Mode */
+  --md-mermaid-font-family: var(--md-font-family);
+  --md-mermaid-edge-color: #71717a;
+  --md-mermaid-node-bg-color: #ffffff;
+  --md-mermaid-node-fg-color: #09090b;
+  --md-mermaid-label-bg-color: #ffffff;
+  --md-mermaid-label-fg-color: #09090b;
+  --md-mermaid-sequence-actor-bg-color: #ffffff;
+  --md-mermaid-sequence-actor-fg-color: #09090b;
+  --md-mermaid-sequence-actor-border-color: #e4e4e7;
+  --md-mermaid-sequence-actor-line-color: #d4d4d8;
+  --md-mermaid-sequence-actorman-bg-color: #ffffff;
+  --md-mermaid-sequence-actorman-line-color: #09090b;
+  --md-mermaid-sequence-box-bg-color: #f4f4f5;
+  --md-mermaid-sequence-box-fg-color: #09090b;
+  --md-mermaid-sequence-label-bg-color: #ffffff;
+  --md-mermaid-sequence-label-fg-color: #09090b;
+  --md-mermaid-sequence-loop-bg-color: #fafafa;
+  --md-mermaid-sequence-loop-fg-color: #09090b;
+  --md-mermaid-sequence-loop-border-color: #e4e4e7;
+  --md-mermaid-sequence-message-fg-color: #09090b;
+  --md-mermaid-sequence-message-line-color: #71717a;
+  --md-mermaid-sequence-note-bg-color: #f8fafc;
+  --md-mermaid-sequence-note-fg-color: #0f172a;
+  --md-mermaid-sequence-note-border-color: #cbd5e1;
+  --md-mermaid-sequence-number-bg-color: #09090b;
+  --md-mermaid-sequence-number-fg-color: #ffffff;
 }
 
 /* -------------------------------------------------------------
@@ -62,6 +90,34 @@
   --vercel-border-color: #262626;
   --vercel-card-bg: #0a0a0a;
   --vercel-header-border: #1f1f1f;
+
+  /* Native Material-for-MkDocs Mermaid Variables for Dark Mode */
+  --md-mermaid-font-family: var(--md-font-family);
+  --md-mermaid-edge-color: #a1a1aa;
+  --md-mermaid-node-bg-color: #18181b;
+  --md-mermaid-node-fg-color: #fafafa;
+  --md-mermaid-label-bg-color: #09090b;
+  --md-mermaid-label-fg-color: #ededed;
+  --md-mermaid-sequence-actor-bg-color: #18181b;
+  --md-mermaid-sequence-actor-fg-color: #fafafa;
+  --md-mermaid-sequence-actor-border-color: #3f3f46;
+  --md-mermaid-sequence-actor-line-color: #3f3f46;
+  --md-mermaid-sequence-actorman-bg-color: #18181b;
+  --md-mermaid-sequence-actorman-line-color: #fafafa;
+  --md-mermaid-sequence-box-bg-color: #18181b;
+  --md-mermaid-sequence-box-fg-color: #fafafa;
+  --md-mermaid-sequence-label-bg-color: #18181b;
+  --md-mermaid-sequence-label-fg-color: #fafafa;
+  --md-mermaid-sequence-loop-bg-color: #18181b;
+  --md-mermaid-sequence-loop-fg-color: #fafafa;
+  --md-mermaid-sequence-loop-border-color: #3f3f46;
+  --md-mermaid-sequence-message-fg-color: #fafafa;
+  --md-mermaid-sequence-message-line-color: #a1a1aa;
+  --md-mermaid-sequence-note-bg-color: #1e1e24;
+  --md-mermaid-sequence-note-fg-color: #e2e8f0;
+  --md-mermaid-sequence-note-border-color: #3f3f46;
+  --md-mermaid-sequence-number-bg-color: #fafafa;
+  --md-mermaid-sequence-number-fg-color: #09090b;
 }
 
 /* -------------------------------------------------------------
@@ -1039,16 +1095,16 @@ body {
 
 [data-md-color-scheme="default"] .mermaid .edgeLabel {
   background-color: #ffffff !important;
-  color: #52525b !important;
+  color: #18181b !important;
 }
 
 [data-md-color-scheme="default"] .mermaid .edgeLabel p,
 [data-md-color-scheme="default"] .mermaid .edgeLabel span {
   background-color: #ffffff !important;
-  color: #52525b !important;
+  color: #18181b !important;
 }
 
-/* Specific classDef overrides for Mermaid diagrams in light mode */
+/* Comprehensive node overrides for Mermaid diagrams in light mode */
 [data-md-color-scheme="default"] .mermaid g[class*="stage"] rect,
 [data-md-color-scheme="default"] .mermaid g[class*="proc"] rect,
 [data-md-color-scheme="default"] .mermaid g[class*="dsp"] rect,
@@ -1062,26 +1118,200 @@ body {
 [data-md-color-scheme="default"] .mermaid g[class*="l3"] rect,
 [data-md-color-scheme="default"] .mermaid g[class*="l4"] rect,
 [data-md-color-scheme="default"] .mermaid g[class*="simStyle"] rect,
-[data-md-color-scheme="default"] .mermaid g[class*="humanStyle"] rect {
+[data-md-color-scheme="default"] .mermaid g[class*="humanStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="git"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="dvc"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="raw"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="cond"] polygon,
+[data-md-color-scheme="default"] .mermaid g[class*="out"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="catalog"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="ytStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="fmaStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="penultStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="predStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="fhStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="mpStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="yfStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="fpStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="dirStyle"] rect {
   fill: #ffffff !important;
 }
 
 [data-md-color-scheme="default"] .mermaid g[class*="stage"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="stage"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="proc"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="proc"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="dsp"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="dsp"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="train"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="train"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="val"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="val"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="test"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="test"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="storage"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="storage"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="cli"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="cli"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="l1"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="l1"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="l2"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="l2"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="l3"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="l3"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="l4"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="l4"] span,
 [data-md-color-scheme="default"] .mermaid g[class*="simStyle"] text,
-[data-md-color-scheme="default"] .mermaid g[class*="humanStyle"] text {
+[data-md-color-scheme="default"] .mermaid g[class*="simStyle"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="humanStyle"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="humanStyle"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="git"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="git"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="dvc"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="dvc"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="raw"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="raw"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="cond"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="cond"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="out"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="out"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="catalog"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="catalog"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="ytStyle"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="ytStyle"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="fmaStyle"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="fmaStyle"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="penultStyle"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="penultStyle"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="predStyle"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="predStyle"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="fhStyle"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="fhStyle"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="mpStyle"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="mpStyle"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="yfStyle"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="yfStyle"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="fpStyle"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="fpStyle"] span,
+[data-md-color-scheme="default"] .mermaid g[class*="dirStyle"] text,
+[data-md-color-scheme="default"] .mermaid g[class*="dirStyle"] span {
   fill: #09090b !important;
   color: #09090b !important;
+}
+
+/* Specific refined borders and styling for each classDef in light mode */
+[data-md-color-scheme="default"] .mermaid g[class*="ytStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="fhStyle"] rect {
+  stroke: #ef4444 !important;
+  background-color: #fef2f2 !important;
+}
+[data-md-color-scheme="default"] .mermaid g[class*="fmaStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="yfStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="humanStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="val"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="l1"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="dsp"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="storage"] rect {
+  stroke: #10b981 !important;
+}
+[data-md-color-scheme="default"] .mermaid g[class*="simStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="train"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="proc"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="stage"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="raw"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="l2"] rect {
+  stroke: #3b82f6 !important;
+}
+[data-md-color-scheme="default"] .mermaid g[class*="penultStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="catalog"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="cli"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="l3"] rect {
+  stroke: #8b5cf6 !important;
+}
+[data-md-color-scheme="default"] .mermaid g[class*="predStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="fpStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="git"] rect {
+  stroke: #f97316 !important;
+}
+[data-md-color-scheme="default"] .mermaid g[class*="test"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="mpStyle"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="l4"] rect {
+  stroke: #f59e0b !important;
+}
+[data-md-color-scheme="default"] .mermaid g[class*="dvc"] rect,
+[data-md-color-scheme="default"] .mermaid g[class*="out"] rect {
+  stroke: #06b6d4 !important;
+}
+[data-md-color-scheme="default"] .mermaid g[class*="cond"] polygon {
+  stroke: #8b5cf6 !important;
+}
+
+/* Sequence Diagram Support in Light Mode */
+[data-md-color-scheme="default"] .mermaid .actor {
+  fill: #ffffff !important;
+  stroke: #d4d4d8 !important;
+}
+[data-md-color-scheme="default"] .mermaid text.actor > tspan,
+[data-md-color-scheme="default"] .mermaid text.actor {
+  fill: #09090b !important;
+  stroke: none !important;
+}
+[data-md-color-scheme="default"] .mermaid .actor-line {
+  stroke: #d4d4d8 !important;
+}
+[data-md-color-scheme="default"] .mermaid .messageLine0,
+[data-md-color-scheme="default"] .mermaid .messageLine1 {
+  stroke: #52525b !important;
+}
+[data-md-color-scheme="default"] .mermaid .messageText {
+  fill: #09090b !important;
+  stroke: none !important;
+}
+[data-md-color-scheme="default"] .mermaid .note {
+  fill: #f8fafc !important;
+  stroke: #cbd5e1 !important;
+}
+[data-md-color-scheme="default"] .mermaid .noteText,
+[data-md-color-scheme="default"] .mermaid .noteText > tspan {
+  fill: #1e293b !important;
+  stroke: none !important;
+}
+[data-md-color-scheme="default"] .mermaid rect.rect {
+  fill: #f1f5f9 !important;
+  stroke: #cbd5e1 !important;
+  opacity: 0.8 !important;
+}
+[data-md-color-scheme="default"] .mermaid rect[fill="rgb(20, 20, 24)"],
+[data-md-color-scheme="default"] .mermaid rect[fill="rgb(20,20,24)"] {
+  fill: #f1f5f9 !important;
+  stroke: #cbd5e1 !important;
+}
+
+/* ERD Diagram Support in Light Mode */
+[data-md-color-scheme="default"] .mermaid .er.entityBox {
+  fill: #ffffff !important;
+  stroke: #d4d4d8 !important;
+}
+[data-md-color-scheme="default"] .mermaid .er.entityLabel {
+  fill: #09090b !important;
+}
+[data-md-color-scheme="default"] .mermaid .er.relationshipLabel {
+  fill: #52525b !important;
+}
+[data-md-color-scheme="default"] .mermaid .er.relationshipLabelBox {
+  fill: #f4f4f5 !important;
+  stroke: #e4e4e7 !important;
+}
+[data-md-color-scheme="default"] .mermaid .er.relationshipLine {
+  stroke: #71717a !important;
+}
+[data-md-color-scheme="default"] .mermaid .er.attributeBoxOdd {
+  fill: #ffffff !important;
+  stroke: #e4e4e7 !important;
+}
+[data-md-color-scheme="default"] .mermaid .er.attributeBoxEven {
+  fill: #f8fafc !important;
+  stroke: #e4e4e7 !important;
 }
 
 
@@ -1110,5 +1340,19 @@ body {
 
 [data-md-color-scheme="default"] .youfy-ds-banner svg *[stroke="#27272A"] {
   stroke: #e4e4e7;
+}
+
+/* Light theme support for unrendered or fallback pre.mermaid blocks */
+[data-md-color-scheme="default"] pre.mermaid {
+  background: #ffffff !important;
+  color: #09090b !important;
+  border: 1px solid #e4e4e7 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+}
+
+[data-md-color-scheme="default"] pre.mermaid > code {
+  color: #09090b !important;
+  background: transparent !important;
 }
 

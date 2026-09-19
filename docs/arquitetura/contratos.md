@@ -17,9 +17,10 @@ flowchart TD
     
     FP --> DirS["data/splits/{fingerprint}/<br/>- train.json<br/>- val.json<br/>- test.json"]
 
-    style FP fill:#431407,stroke:#ff5500,color:#fed7aa
-    style DirF fill:#18181b,stroke:#27272a,color:#ededed
-    style DirS fill:#18181b,stroke:#27272a,color:#ededed
+    classDef fpStyle fill:#431407,stroke:#ff5500,stroke-width:1.5px,color:#fed7aa;
+    classDef dirStyle fill:#18181b,stroke:#27272a,stroke-width:1.5px,color:#ededed;
+    class FP fpStyle;
+    class DirF,DirS dirStyle;
 ```
 
 ### Por que Invalidação por Diretório?
