@@ -1128,7 +1128,7 @@ git commit -m "feat(ml): metricas de avaliacao e teste de rotulos embaralhados"
 Função pura, sem I/O. É o coração do gate da spec, e por ser pura dá para testá-la
 exaustivamente — inclusive nos limites, que é onde um gate mal escrito promove ruído.
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/ml/tests/test_promotion.py
@@ -1196,12 +1196,12 @@ def test_margem_e_piso_sao_configuraveis():
     assert should_promote(_m(0.50), None, floor=0.60).promote is False
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/ml/tests/test_promotion.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_ml.promotion'`
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 ```python
 # packages/ml/src/youfy_ml/promotion.py
@@ -1262,12 +1262,12 @@ def should_promote(
     )
 ```
 
-- [ ] **Step 4: Rodar os testes e confirmar que passam**
+- [x] **Step 4: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/ml/tests/test_promotion.py -v`
 Expected: PASS nos 11 testes
 
-- [ ] **Step 5: Commitar**
+- [x] **Step 5: Commitar**
 
 ```bash
 git add packages/ml
