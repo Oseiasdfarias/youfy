@@ -285,7 +285,11 @@ function drawPlayerIdle() {
     }
 
     pCtx.beginPath();
-    pCtx.roundRect(x, y, barWidth, bh, [2, 2, 0, 0]);
+    if (pCtx.roundRect) {
+      pCtx.roundRect(x, y, barWidth, bh, [2, 2, 0, 0]);
+    } else {
+      pCtx.rect(x, y, barWidth, bh);
+    }
     pCtx.fill();
   }
 }
@@ -310,6 +314,8 @@ function startSynth() {
 
       masterGain = audioCtx.createGain();
       masterGain.gain.setValueAtTime(0.22, audioCtx.currentTime);
+
+      // Routing: Synth Voice -> Analyser -> Master Gain -> Speakers
       analyser.connect(masterGain);
       masterGain.connect(audioCtx.destination);
     }
@@ -347,18 +353,22 @@ function startSynth() {
       osc2.frequency.setValueAtTime(freq * 0.5, audioCtx.currentTime); // Sub-bass octave
 
       const now = audioCtx.currentTime;
-      noteGain.gain.setValueAtTime(0.18, now);
+      noteGain.gain.setValueAtTime(0.22, now);
       noteGain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
 
       osc.connect(noteGain);
       osc2.connect(noteGain);
-      noteGain.connect(masterGain);
+      // Route note into analyser so real frequency data is captured
+      noteGain.connect(analyser);
 
       osc.start(now);
       osc2.start(now);
       osc.stop(now + 0.35);
       osc2.stop(now + 0.35);
     }
+
+    // Trigger first note immediately so FFT data is immediately present
+    playSynthNote();
 
     synthTimer = setInterval(() => {
       playSynthNote();
@@ -367,20 +377,23 @@ function startSynth() {
       
       const mins = Math.floor(currentSeconds / 60);
       const secs = Math.floor(currentSeconds % 60);
-      document.getElementById('player-time').textContent = 
-        String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+      const timeEl = document.getElementById('player-time');
+      if (timeEl) {
+        timeEl.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+      }
     }, 200);
 
     // FFT Real-time animation loop via requestAnimationFrame
     const bufferLength = analyser.frequencyBinCount; // 32 frequency bins
     const dataArray = new Uint8Array(bufferLength);
+    let renderTick = 0;
 
     function renderFFT() {
       if (!isPlaying) return;
       analyser.getByteFrequencyData(dataArray);
 
-      const w = pCanvas.width;
-      const h = pCanvas.height;
+      const w = pCanvas.width || pCanvas.parentElement.clientWidth;
+      const h = pCanvas.height || 68;
       pCtx.clearRect(0, 0, w, h);
 
       const isLightMode = document.body.getAttribute('data-md-color-scheme') === 'default' || 
@@ -389,11 +402,14 @@ function startSynth() {
       const barWidth = Math.max(3, (w - (bufferLength - 1) * barGap) / bufferLength);
       const progressIdx = Math.floor((currentSeconds / totalSeconds) * bufferLength);
 
+      renderTick += 0.08;
+
       for (let i = 0; i < bufferLength; i++) {
         const binValue = dataArray[i];
-        // Calculate bar height with dynamic amplification
-        const rawHeight = (binValue / 255) * (h - 8);
-        const bh = Math.max(4, rawHeight);
+        // Calculate dynamic height: use real FFT or lively synth simulation if buffer is low
+        const synthMod = (Math.sin(renderTick * 1.5 + i * 0.45) * 0.35 + 0.45);
+        const dynamicFraction = binValue > 8 ? (binValue / 255) : (synthMod * 0.65);
+        const bh = Math.max(6, dynamicFraction * (h - 8));
         const x = i * (barWidth + barGap);
         const y = h - bh;
 
@@ -406,13 +422,17 @@ function startSynth() {
           pCtx.shadowBlur = 12;
         } else {
           // Future unplayed bars pulse with softer ambient level
-          const softAlpha = isLightMode ? (0.22 + (binValue / 255) * 0.45) : (0.15 + (binValue / 255) * 0.35);
-          pCtx.fillStyle = isLightMode ? `rgba(15, 23, 42, ${softAlpha.toFixed(2)})` : `rgba(255, 255, 255, ${softAlpha.toFixed(2)})`;
+          const softAlpha = isLightMode ? 0.32 : 0.25;
+          pCtx.fillStyle = isLightMode ? `rgba(15, 23, 42, ${softAlpha})` : `rgba(255, 255, 255, ${softAlpha})`;
           pCtx.shadowBlur = 0;
         }
 
         pCtx.beginPath();
-        pCtx.roundRect(x, y, barWidth, bh, [2, 2, 0, 0]);
+        if (pCtx.roundRect) {
+          pCtx.roundRect(x, y, barWidth, bh, [2, 2, 0, 0]);
+        } else {
+          pCtx.rect(x, y, barWidth, bh);
+        }
         pCtx.fill();
       }
 
