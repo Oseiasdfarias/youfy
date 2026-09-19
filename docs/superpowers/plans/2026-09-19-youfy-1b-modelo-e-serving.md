@@ -537,7 +537,7 @@ git commit -m "feat(ml): dataset de melspec desacoplado do catalogo"
 
 A CNN termina em `AdaptiveAvgPool2d(1)`, o que a torna **independente de `n_mels` e `n_frames`**. Isso elimina aritmética de shape na cabeça — a classe de bug mais chata de depurar quando se muda a `FeatureSpec`.
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/ml/tests/test_model.py
@@ -612,12 +612,12 @@ def test_liga_algoritmos_deterministicos():
     assert torch.are_deterministic_algorithms_enabled()
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/ml/tests/test_model.py packages/ml/tests/test_seeding.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_ml.model'`
 
-- [ ] **Step 3: Implementar o semeador**
+- [x] **Step 3: Implementar o semeador**
 
 ```python
 # packages/ml/src/youfy_ml/seeding.py
@@ -660,7 +660,7 @@ def worker_init(worker_id: int) -> None:
     random.seed(semente + worker_id)
 ```
 
-- [ ] **Step 4: Implementar a CNN**
+- [x] **Step 4: Implementar a CNN**
 
 ```python
 # packages/ml/src/youfy_ml/model.py
@@ -699,12 +699,12 @@ class GenreCNN(nn.Module):
         return self.head(h)
 ```
 
-- [ ] **Step 5: Rodar os testes e confirmar que passam**
+- [x] **Step 5: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/ml/tests -v`
 Expected: PASS nos 20 testes
 
-- [ ] **Step 6: Commitar**
+- [x] **Step 6: Commitar**
 
 ```bash
 git add packages/ml
