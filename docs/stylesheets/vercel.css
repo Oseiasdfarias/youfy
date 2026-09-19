@@ -270,7 +270,6 @@ body {
 
 /* General Menu Link */
 .md-nav__link {
-  display: flex !important;
   align-items: center;
   font-size: 0.82rem !important;
   font-weight: 450;
@@ -281,6 +280,13 @@ body {
   margin: 0.1rem 0;
   border: 1px solid transparent;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Ensure Material's TOC toggle label on primary nav stays hidden on desktop to avoid duplicate label */
+@media screen and (min-width: 60em) {
+  .md-nav--primary .md-nav__link[for="__toc"] {
+    display: none !important;
+  }
 }
 
 /* Hover State */
