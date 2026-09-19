@@ -1423,3 +1423,28 @@ body {
   background: transparent !important;
 }
 
+/* -------------------------------------------------------------
+ * MathJax / Arithmatex Styling
+ * ------------------------------------------------------------- */
+.arithmatex {
+  color: var(--md-default-fg-color);
+  font-family: inherit;
+}
+
+div.arithmatex {
+  display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin: 1.2em 0;
+  padding: 0.8em 1.2em;
+  background-color: var(--vercel-card-bg);
+  border: 1px solid var(--vercel-border-color);
+  border-radius: 8px;
+  text-align: center;
+}
+
+mjx-container[jax="CHTML"][display="true"] {
+  margin: 0 !important;
+  color: inherit !important;
+}
+
