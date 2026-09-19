@@ -102,3 +102,23 @@ Além dos testes unitários convencionais, o Youfy executa testes de propriedade
 - Gera dezenas de catálogos sintéticos com topologias extremas (artistas com muitas faixas, artistas com uma única faixa, distribuições desbalanceadas de gêneros).
 - Valida que o invariante de disjunção se mantém rigorosamente verdadeiro para qualquer acervo arbitrário.
 
+---
+
+## Invariantes de Treino e Serving
+
+### 1. Reprodutibilidade com Mesma Seed
+$$\forall s, \quad \text{Train}(\text{seed}=s) \equiv \text{Train}(\text{seed}=s) \implies |\text{loss}_1 - \text{loss}_2| \le 0.002$$
+O loop de treinamento em PyTorch roda com algoritmos determinísticos ativados (`torch.use_deterministic_algorithms(True)`). Duas execuções com o mesmo conjunto de dados e mesma semente produzem parâmetros idênticos.
+
+### 2. Sanidade do Gradiente (Overfit em Amostra Reduzida)
+$$\text{Train}(N=50, \text{epochs}=30) \implies \text{Acurácia} \ge 0.95$$
+Antes de aceitar uma arquitetura neural, ela deve provar capacidade de representação atingindo pelo menos 95% de acurácia sobre um mini-batch de 50 amostras sintéticas.
+
+### 3. Ausência de Vazamento de Rótulos (Shuffled Labels)
+$$\text{Train}(\text{rótulos\_embaralhados}, K=8) \implies \text{Macro-F1} \le 0.20 \quad (\text{Acaso} = 1/8 = 0.125)$$
+Se os rótulos do conjunto de treino forem aleatorizados, o modelo não pode superar a faixa do acaso puro, demonstrando que não há atalhos espúrios ou vazamentos de dados na pipeline.
+
+### 4. Proteção contra Training/Serving Skew
+$$\text{Serving.boot}(\text{expected\_spec}) \implies \text{expected\_spec} \equiv \text{model.metadata.spec}$$
+Se qualquer atributo da representação espectral (como `sample_rate`, `n_mels` ou `hop_length`) no momento do serving diferir dos parâmetros de treinamento, o sistema lança `FeatureSpecMismatch` e impede a inicialização.
+
