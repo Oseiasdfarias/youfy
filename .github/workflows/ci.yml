@@ -30,4 +30,6 @@ jobs:
           uv run alembic check
       - run: uv run pytest -v
       - run: uv run pytest pipelines/tests/test_pipeline_e2e.py -v --durations=5
+      - run: uv run pytest pipelines/tests/test_ciclo_1b_e2e.py -v --durations=5
+
 

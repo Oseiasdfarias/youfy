@@ -1813,7 +1813,7 @@ git commit -m "feat(serving): carga do registry com validacao de featurespec na 
   - `run_evaluate(session, *, data_dir, spec, tracking_uri, model_name, version) -> PromotionDecision`
   - CLI: `youfy pipeline train`, `youfy pipeline evaluate`
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # pipelines/tests/test_training.py
@@ -1964,12 +1964,12 @@ def test_featurizer_divergente_derruba_o_serving_na_carga(session, acervo):
         )
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest pipelines/tests/test_training.py pipelines/tests/test_ciclo_1b_e2e.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_pipelines.training'`
 
-- [ ] **Step 3: Acrescentar as consultas ao catálogo**
+- [x] **Step 3: Acrescentar as consultas ao catálogo**
 
 ```python
 # packages/catalog/src/youfy_catalog/queries.py
@@ -2011,7 +2011,7 @@ def known_genres(session: Session) -> list[str]:
     return sorted(linhas)
 ```
 
-- [ ] **Step 4: Implementar a ponte em `pipelines`**
+- [x] **Step 4: Implementar a ponte em `pipelines`**
 
 ```python
 # pipelines/src/youfy_pipelines/training.py
@@ -2139,7 +2139,7 @@ def carregar_versao(
 Acrescente `youfy-ml` e `youfy-serving` às `dependencies` e ao `[tool.uv.sources]`
 de `pipelines/pyproject.toml`.
 
-- [ ] **Step 5: Acrescentar os comandos à CLI**
+- [x] **Step 5: Acrescentar os comandos à CLI**
 
 ```python
 # pipelines/src/youfy_pipelines/cli.py — acrescentar
@@ -2195,7 +2195,7 @@ def evaluate_cmd(
     typer.echo(f"promoveu={decisao.promote} motivo={decisao.reason}")
 ```
 
-- [ ] **Step 6: Estender o teste de fronteira e o Makefile**
+- [x] **Step 6: Estender o teste de fronteira e o Makefile**
 
 ```python
 # tests/test_workspace.py — acrescentar
@@ -2232,7 +2232,7 @@ e2e-1b:
 	uv run pytest pipelines/tests/test_ciclo_1b_e2e.py -v --durations=5
 ```
 
-- [ ] **Step 7: Rodar tudo e acrescentar ao CI**
+- [x] **Step 7: Rodar tudo e acrescentar ao CI**
 
 ```yaml
 # .github/workflows/ci.yml — acrescentar depois do e2e do 1A
@@ -2242,7 +2242,7 @@ e2e-1b:
 Run: `make lint && make test && make e2e && make e2e-1b`
 Expected: lint limpo; toda a suíte verde; os dois e2e passando
 
-- [ ] **Step 8: Commitar**
+- [x] **Step 8: Commitar**
 
 ```bash
 git add pipelines packages/catalog packages/serving tests Makefile .github pyproject.toml uv.lock

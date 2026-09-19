@@ -5273,6 +5273,8 @@ dependencies = [
     { name = "typer" },
     { name = "youfy-audio" },
     { name = "youfy-catalog" },
+    { name = "youfy-ml" },
+    { name = "youfy-serving" },
 ]
 
 [package.metadata]
@@ -5281,6 +5283,8 @@ requires-dist = [
     { name = "typer", specifier = ">=0.12" },
     { name = "youfy-audio", editable = "packages/audio" },
     { name = "youfy-catalog", editable = "packages/catalog" },
+    { name = "youfy-ml", editable = "packages/ml" },
+    { name = "youfy-serving", editable = "packages/serving" },
 ]
 
 [[package]]

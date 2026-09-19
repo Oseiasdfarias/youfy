@@ -50,3 +50,23 @@ def load_production(
         )
 
     return LoadedModel(classifier=classificador, model_version=versao.version)
+
+
+def carregar_versao(
+    *, tracking_uri: str, model_name: str, version: str, expected_spec: FeatureSpec
+) -> TorchGenreClassifier:
+    """Carrega uma versão específica, sem passar pelo alias de produção."""
+    cliente = MlflowClient(tracking_uri=tracking_uri, registry_uri=tracking_uri)
+    versao = cliente.get_model_version(model_name, version)
+    mlflow.set_tracking_uri(tracking_uri)
+    local = mlflow.artifacts.download_artifacts(
+        run_id=versao.run_id, artifact_path=CAMINHO_ARTEFATO
+    )
+    classificador = TorchGenreClassifier.load(Path(local))
+    if classificador.feature_spec != expected_spec:
+        raise FeatureSpecMismatch(
+            f"versao {version}: modelo={classificador.feature_spec.fingerprint()} "
+            f"contra featurizer={expected_spec.fingerprint()}"
+        )
+    return classificador
+

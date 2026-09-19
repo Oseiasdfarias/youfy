@@ -1,4 +1,4 @@
-.PHONY: setup up down lint test migrate migrate-check ingest featurize split e2e dvc-push docs-build docs-serve mlflow-db mlflow-up
+.PHONY: setup up down lint test migrate migrate-check ingest featurize split e2e dvc-push docs-build docs-serve mlflow-db mlflow-up train evaluate e2e-1b
 
 setup:
 	uv sync --all-extras
@@ -49,3 +49,13 @@ mlflow-db:
 
 mlflow-up: mlflow-db
 	docker compose up -d --wait mlflow
+
+train:
+	uv run youfy pipeline train
+
+evaluate:
+	uv run youfy pipeline evaluate --version $(VERSION)
+
+e2e-1b:
+	uv run pytest pipelines/tests/test_ciclo_1b_e2e.py -v --durations=5
+

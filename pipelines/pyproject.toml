@@ -5,6 +5,8 @@ requires-python = ">=3.11"
 dependencies = [
     "youfy-audio",
     "youfy-catalog",
+    "youfy-ml",
+    "youfy-serving",
     "typer>=0.12",
     "structlog>=24.1",
 ]
@@ -15,6 +17,8 @@ youfy = "youfy_pipelines.cli:app"
 [tool.uv.sources]
 youfy-audio = { workspace = true }
 youfy-catalog = { workspace = true }
+youfy-ml = { workspace = true }
+youfy-serving = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]
