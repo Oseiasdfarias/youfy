@@ -1294,7 +1294,7 @@ git commit -m "feat(ml): gate de promocao codificado com margem contra ruido de 
 Os testes usam `sqlite:///<tmp>/mlflow.db`: o **file store do MLflow não suporta
 Model Registry**, então tracking em arquivo simples não serviria aqui.
 
-- [ ] **Step 1: Escrever os testes que falham**
+- [x] **Step 1: Escrever os testes que falham**
 
 ```python
 # packages/ml/tests/test_tracking.py
@@ -1389,12 +1389,12 @@ def test_promover_move_o_alias_para_a_nova_versao(tracking_uri, resultado):
     ).macro_f1 == pytest.approx(0.80)
 ```
 
-- [ ] **Step 2: Rodar e confirmar que falham**
+- [x] **Step 2: Rodar e confirmar que falham**
 
 Run: `uv run pytest packages/ml/tests/test_tracking.py -v`
 Expected: FAIL com `ModuleNotFoundError: No module named 'youfy_ml.tracking'`
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 ```python
 # packages/ml/src/youfy_ml/tracking.py
@@ -1484,12 +1484,12 @@ def load_champion_metrics(*, tracking_uri: str, model_name: str) -> Metrics | No
     return Metrics(**json.loads(Path(local).read_text()))
 ```
 
-- [ ] **Step 4: Rodar os testes e confirmar que passam**
+- [x] **Step 4: Rodar os testes e confirmar que passam**
 
 Run: `uv run pytest packages/ml/tests/test_tracking.py -v`
 Expected: PASS nos 5 testes
 
-- [ ] **Step 5: Commitar**
+- [x] **Step 5: Commitar**
 
 ```bash
 git add packages/ml
