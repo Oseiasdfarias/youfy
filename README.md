@@ -1,102 +1,101 @@
 <div align="center">
 
-<img src="docs/assets/banner.svg" alt="Youfy Banner" width="100%" />
-
-# Youfy
-
-**Closed-Loop Music Intelligence & MLOps Platform**
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/banner-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/banner-light.svg">
+  <img alt="youfy: a music app that exists to put real load on ML models" src="docs/assets/readme/banner-dark.svg" width="100%">
+</picture>
 
 [![CI](https://github.com/Oseiasdfarias/youfy/actions/workflows/ci.yml/badge.svg)](https://github.com/Oseiasdfarias/youfy/actions/workflows/ci.yml)
-[![Documentation](https://github.com/Oseiasdfarias/youfy/actions/workflows/deploy-docs.yml/badge.svg)](https://oseiasdfarias.github.io/youfy/)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-black.svg?style=flat&logo=python)](https://www.python.org/)
-[![DVC](https://img.shields.io/badge/data_versioning-DVC-black.svg?style=flat&logo=dvc)](https://dvc.org/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-black.svg?style=flat)](LICENSE)
+[![Docs](https://img.shields.io/badge/docs-online-141416?style=flat-square&logo=materialformkdocs&logoColor=d4885a&labelColor=141416)](https://oseiasdfarias.github.io/youfy/)
+![Python](https://img.shields.io/badge/python-3.11+-141416?style=flat-square&logo=python&logoColor=d4885a&labelColor=141416)
+![Status](https://img.shields.io/badge/status-in%20progress-141416?style=flat-square&labelColor=141416&color=d4885a)
 
-[📖 **Documentação Online**](https://oseiasdfarias.github.io/youfy/) • [Arquitetura](https://oseiasdfarias.github.io/youfy/arquitetura/decisoes/) • [Contratos](https://oseiasdfarias.github.io/youfy/arquitetura/contratos/) • [Guia Rápido](https://oseiasdfarias.github.io/youfy/guia/inicio-rapido/)
+**English** · [Português](README.pt-BR.md)
 
 </div>
 
----
+## What is Youfy?
 
-## Sobre o Projeto
+Youfy is an **applied AI lab shaped like a music app**. The product exists to give models a real job; the real goal is the **model lifecycle**: reproducible data, tracked training, a promotion rule that only lets better models into production, and serving that refuses inputs it was not trained for.
 
-O **Youfy** é um laboratório de IA aplicada no formato de um ecossistema musical de alta fidelidade. O produto existe para dar carga real aos modelos em produção; os modelos e seu ciclo de vida (MLOps) são o objetivo central.
+The first model classifies the **genre** of a music clip from its mel-spectrogram, trained on the open [Free Music Archive](https://github.com/mdeff/fma) benchmark (about 8,000 clips, 8 balanced genres).
 
-- **Catálogo Aberto:** Ingestão estruturada do benchmark acadêmico **Free Music Archive (FMA)** (~8.000 clipes, 8 gêneros balanceados).
-- **Invariante de Artista Testado:** Particionamento estratificado com garantia matemática e testes de propriedade (Hypothesis) de disjunção estrita ($\text{artistas}(\text{train}) \cap \text{artistas}(\text{test}) = \emptyset$).
-- **Cache por Fingerprint:** Mel-espectrogramas armazenados sob hash SHA-256 da `FeatureSpec`, eliminando *training/serving skew* e permitindo invalidação de cache por diretório.
-- **Rastreabilidade DVC:** Matrizes binárias `.npy` versionadas com DVC e remote configurado.
-- **Observabilidade Magra:** Logs em JSON estruturado com `structlog`.
+## Pipeline
 
----
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/pipeline-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/readme/pipeline-light.svg">
+  <img alt="Youfy pipeline: data, training and serving stages" src="docs/assets/readme/pipeline-dark.svg" width="100%">
+</picture>
 
-## Começando
+## What makes it more than a notebook
 
-### 1. Pré-requisitos
-- Python 3.11+
-- `uv` (gerenciador de dependências)
-- Docker & Docker Compose
+| Problem | How Youfy handles it |
+|---|---|
+| **Data leakage between train and test** | Splits are disjoint **by artist**, and the guarantee is checked with property-based tests (Hypothesis). |
+| **Training/serving skew** | Mel-spectrograms are cached under the SHA-256 hash of their `FeatureSpec`. Serving loads the model with the spec it expects and **refuses to start** if they differ. |
+| **"Is this model really better?"** | A coded **promotion gate**: the first model needs macro-F1 ≥ 0.40; a challenger must beat the champion by a margin, so seed noise cannot replace a good model. |
+| **Results nobody can reproduce** | Deterministic, seeded training; a shuffled-label test to catch leakage; every run tracked in **MLflow**; features versioned with **DVC**. |
+| **Broken data in the pipeline** | Corrupted audio goes to quarantine during ingestion instead of crashing the run. |
 
-### 2. Instalação e Testes
+**Status:** data pipeline (phase 1a) and model training, registry and serving loader (phase 1b) are implemented and covered by **109 tests** in CI. Next: an inference API and drift monitoring.
 
-```bash
-# Configura o workspace monorepo com lockfile determinístico
-make setup
+## Quick start
 
-# Inicializa o Postgres 16 local (porta 5433)
-make up
-
-# Executa a suíte de testes unitários e de integração (45 testes)
-make test
-
-# Executa o pipeline ponta a ponta sobre micro-dataset
-make e2e
-
-# Executa checagem de linter
-make lint
-```
-
-### 3. Documentação Local
+Requirements: Python 3.11+, [uv](https://docs.astral.sh/uv/), Docker and Docker Compose.
 
 ```bash
-# Servidor local de documentação com live-reload (http://localhost:8000)
-make docs-serve
-
-# Build estrito da documentação
-make docs-build
+make setup        # install the workspace with a locked environment
+make up           # start Postgres
+make test         # unit and integration tests
+make e2e          # end-to-end data pipeline on a micro dataset
 ```
 
----
-
-## Pipeline Offline (CLI Typer)
+Run the pipeline:
 
 ```bash
-# 1. Ingestão com quarentena automática de áudios corrompidos
-youfy pipeline ingest --dump-dir ./data/raw/fma --subset small
+youfy pipeline ingest --dump-dir ./data/raw/fma --subset small   # ingest + quarantine
+youfy pipeline featurize --n-mels 128 --hop-length 512           # resumable, cached by fingerprint
+youfy pipeline split --seed 42                                   # deterministic, artist-disjoint
 
-# 2. Featurização retomável (gera .npy e _manifest.json por fingerprint)
-youfy pipeline featurize --n-mels 128 --hop-length 512
-
-# 3. Particionamento determinístico por artista
-youfy pipeline split --seed 42
+make mlflow-up                                                   # MLflow on localhost:5000
+youfy pipeline train --epochs 10 --batch-size 32 --seed 42       # tracked run + registered version
+youfy pipeline evaluate --version 1 --margin 0.005 --floor 0.40  # promotion gate
 ```
 
----
+Load the production model in Python:
 
-## Estrutura do Monorepo
+```python
+from youfy_audio.spec import FeatureSpec
+from youfy_serving.loader import load_production
+
+spec = FeatureSpec(sample_rate=22050, n_mels=128, hop_length=512, n_frames=1292)
+model = load_production(
+    tracking_uri="http://localhost:5000",
+    model_name="youfy-genre-cnn",
+    expected_spec=spec,  # raises if the model was trained with a different spec
+)
+```
+
+## Repository layout
 
 ```
 youfy/
 ├── packages/
-│   ├── audio/           # DSP e extração de melspec (funções puras sobre arrays)
-│   └── catalog/         # Modelos SQLAlchemy 2.0, migrations Alembic e parser FMA
-├── pipelines/           # CLI Typer 'youfy' e estágios offline
-├── docs/                # Documentação técnica MkDocs e especificações de engenharia
-└── data/                # Features (.npy) e splits (.json) rastreados por DVC
+│   ├── audio/      # DSP and mel-spectrogram extraction (pure functions)
+│   ├── catalog/    # SQLAlchemy 2.0 models, Alembic migrations, FMA parser
+│   ├── ml/         # GenreCNN, deterministic training, evaluation, MLflow tracking, promotion gate
+│   └── serving/    # load from the registry with FeatureSpec validation, predictor
+├── pipelines/      # Typer CLI `youfy` and offline stages
+├── docs/           # MkDocs documentation and engineering specs
+└── data/           # features and splits tracked by DVC
 ```
 
----
+## Documentation
 
-## Licença
+Full docs, architecture decisions and data contracts: **[oseiasdfarias.github.io/youfy](https://oseiasdfarias.github.io/youfy/)** (in Portuguese).
 
-Distribuído sob a licença MIT. Consulte a documentação para mais detalhes.
+## Author
+
+Built by **[Oséias Farias](https://github.com/Oseiasdfarias)**, Applied AI & MLOps Engineer.
